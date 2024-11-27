@@ -1,27 +1,29 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Runtime.CompilerServices;
-using JetBrains.Annotations;
-using TreeEditor;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Splines;
 
 public class GraphNavigator : MonoBehaviour
 {
-    // Start is called before the first frame update
     void Start()
     {
-
+        BakeRoutes();
     }
 
-    // Update is called once per frame
-    void Update()
+    void BakeRoutes()
     {
+        // TODO: Implement
 
+        // Bake graph routes into a dictionary usable for path finding purposes.
+    }
+
+    public RouteEntry NextHopTo(GameObject target)
+    {
+        // TODO: Implement
+
+        // Find nex hop on the shortest path to the `target`.
+        // Null if unable to find the route.
+
+        return null;
     }
 
     private void OnDrawGizmos()
@@ -39,23 +41,12 @@ public class GraphNavigator : MonoBehaviour
 
     private void FixPath(RouteEntry route)
     {
-        if (route.path == null)
+        if (route.path == null || route.target == null)
         {
             return;
         }
 
-        route.path.TryGetComponent(out SplineContainer splineCollection);
-
-        if (splineCollection == null)
-        {
-            return;
-        }
-
-        if (route.target == null)
-        {
-            return;
-        }
-
+        SplineContainer splineCollection = route.path.GetComponent<SplineContainer>();
         GameObject target = route.target;
 
         if (splineCollection.Splines.Count == 0)
@@ -113,7 +104,7 @@ public class GraphNavigator : MonoBehaviour
         {
             if (route.target == gameObject)
             {
-                Debug.LogWarning("A route cannot lead back to the object it comes from.");
+                Debug.LogWarning("A route cannot lead back to the object it belongs to.");
                 continue;
             }
 
@@ -121,11 +112,6 @@ public class GraphNavigator : MonoBehaviour
 
             foreach (RouteEntry otherRoute in newRoutes)
             {
-                if (otherRoute.target == null)
-                {
-                    nullRouteExists = true;
-                }
-
                 if (otherRoute.target == route.target)
                 {
                     duplicate = true;
@@ -140,6 +126,11 @@ public class GraphNavigator : MonoBehaviour
             {
                 newRoutes.Add(route);
             }
+
+            if (route.target == null)
+            {
+                nullRouteExists = true;
+            }
         }
 
         publicRoutes = newRoutes;
@@ -147,12 +138,7 @@ public class GraphNavigator : MonoBehaviour
 
     void ReplicatePath(RouteEntry route)
     {
-        if (route.target == null)
-        {
-            return;
-        }
-
-        if (route.path == null)
+        if (route.target == null || route.path == null)
         {
             return;
         }
