@@ -12,6 +12,6 @@ public class MyComponentEditor : Editor
 
         GraphNavigator navigator = (GraphNavigator)target;
 
-        navigator.FixPathSplines();
+        navigator.OnEditorUpdate();
     }
 }

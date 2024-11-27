@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
 using TreeEditor;
 using UnityEditor;
 using UnityEngine;
@@ -69,17 +71,109 @@ public class GraphNavigator : MonoBehaviour
             spline.SetTangentMode(spline.Count - 1, TangentMode.AutoSmooth);
         }
 
-        BezierKnot first = spline[0];
-        BezierKnot last = spline[spline.Count - 1];
+        int firstIndex = 0;
+        int lastIndex = spline.Count - 1;
+
+        if (route.inverted)
+        {
+            firstIndex = lastIndex;
+            lastIndex = 0;
+        }
+
+        BezierKnot first = spline[firstIndex];
+        BezierKnot last = spline[lastIndex];
 
         first.Position = transform.position - route.path.transform.position;
         last.Position = target.transform.position - route.path.transform.position;
 
-        spline.SetKnot(0, first);
-        spline.SetKnot(spline.Count - 1, last);
+        spline.SetKnot(firstIndex, first);
+        spline.SetKnot(lastIndex, last);
 
-        spline.SetTangentMode(0, TangentMode.AutoSmooth);
-        spline.SetTangentMode(spline.Count - 1, TangentMode.AutoSmooth);
+        spline.SetTangentMode(firstIndex, TangentMode.AutoSmooth);
+        spline.SetTangentMode(lastIndex, TangentMode.AutoSmooth);
+    }
+
+    public void OnEditorUpdate()
+    {
+        RemoveDuplicates();
+
+        foreach (RouteEntry entry in publicRoutes)
+        {
+            ReplicatePath(entry);
+        }
+    }
+
+    void RemoveDuplicates()
+    {
+        List<RouteEntry> newRoutes = new List<RouteEntry>();
+
+        bool nullRouteExists = false;
+
+        foreach (RouteEntry route in publicRoutes)
+        {
+            if (route.target == gameObject)
+            {
+                Debug.LogWarning("A route cannot lead back to the object it comes from.");
+                continue;
+            }
+
+            bool duplicate = false;
+
+            foreach (RouteEntry otherRoute in newRoutes)
+            {
+                if (otherRoute.target == null)
+                {
+                    nullRouteExists = true;
+                }
+
+                if (otherRoute.target == route.target)
+                {
+                    duplicate = true;
+                    route.target = null;
+                    route.path = null;
+                    route.inverted = false;
+                    break;
+                }
+            }
+
+            if (!duplicate || !nullRouteExists)
+            {
+                newRoutes.Add(route);
+            }
+        }
+
+        publicRoutes = newRoutes;
+    }
+
+    void ReplicatePath(RouteEntry route)
+    {
+        if (route.target == null)
+        {
+            return;
+        }
+
+        if (route.path == null)
+        {
+            return;
+        }
+
+        GraphNavigator neighborNavigator = route.target.GetComponent<GraphNavigator>();
+        foreach (RouteEntry entry in neighborNavigator.publicRoutes)
+        {
+            if (entry.target == gameObject)
+            {
+                entry.path = route.path;
+                entry.inverted = !route.inverted;
+                return;
+            }
+        }
+
+        RouteEntry neighborRoute = new RouteEntry();
+        neighborRoute.target = gameObject;
+        neighborRoute.path = route.path;
+        neighborRoute.inverted = !route.inverted;
+
+        neighborNavigator.publicRoutes.Add(neighborRoute);
     }
 
     [System.Serializable]
@@ -89,6 +183,8 @@ public class GraphNavigator : MonoBehaviour
         public GameObject target;
         [RequireComponentAttribute(typeof(SplineContainer))]
         public GameObject path;
+
+        public bool inverted = false;
     }
 
     public List<RouteEntry> publicRoutes = new List<RouteEntry>();
