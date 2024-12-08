@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -11,19 +13,48 @@ public class GraphNavigator : MonoBehaviour
 
     void BakeRoutes()
     {
-        // TODO: Implement
+        // Target => best nexthop & it's length
+        var distances = new Dictionary<GameObject, Tuple<RouteEntry, int>>();
 
-        // Bake graph routes into a dictionary usable for path finding purposes.
+        // Queue of destinations 
+        var queue = new Queue<GameObject>();
+
+        // Populate with neighbours
+        foreach (RouteEntry neigh in publicRoutes) {
+            distances[neigh.target] = new Tuple<RouteEntry, int>(neigh, 1);
+            queue.Append(neigh.target);
+        }
+
+        // Main loop (basicly BFS)
+        // - Kinda expensive and probably could be better (redoing other nodes work)
+        // - Also using O(nodes) GetComponent
+        foreach (GameObject destination in queue) {
+            // Retiriving GraphNavigator 
+            var navigator = destination.GetComponent<GraphNavigator>();
+            var link = distances[destination];
+
+            // Checking it's neighbours
+            foreach (RouteEntry next_dest in navigator.publicRoutes) {
+                // Skip if too long
+                if (distances.ContainsKey(next_dest.target) && distances[next_dest.target].Item2 >= link.Item2 + 1) {
+                    continue;
+                }
+
+                // Update distance
+                distances[next_dest.target] = new Tuple<RouteEntry, int>(link.Item1, link.Item2 + 1);
+            }
+        }
+
+        // Bake into nextHop
+        nextHop = new Dictionary<GameObject, RouteEntry>();
+        foreach (var destination in distances) {
+            nextHop[destination.Key] = destination.Value.Item1;
+        }
     }
 
     public RouteEntry NextHopTo(GameObject target)
     {
-        // TODO: Implement
-
-        // Find nex hop on the shortest path to the `target`.
-        // Null if unable to find the route.
-
-        return null;
+        return nextHop[target];
     }
 
     private void OnDrawGizmos()
@@ -174,4 +205,5 @@ public class GraphNavigator : MonoBehaviour
     }
 
     public List<RouteEntry> publicRoutes = new List<RouteEntry>();
+    Dictionary<GameObject, RouteEntry> nextHop = new Dictionary<GameObject, RouteEntry>();
 }
