@@ -6,7 +6,7 @@ using UnityEngine.Splines;
 
 public class GraphNavigator : MonoBehaviour
 {
-    void Start()
+    void Awake()
     {
         BakeRoutes();
     }
@@ -14,7 +14,7 @@ public class GraphNavigator : MonoBehaviour
     void BakeRoutes()
     {
         // Target => best nexthop & it's length
-        var distances = new Dictionary<GameObject, Tuple<RouteEntry, int>>();
+        var distances = new Dictionary<GameObject, Tuple<RouteEntry, float>>();
 
         // Queue of destinations 
         var queue = new Queue<GameObject>();
@@ -22,7 +22,8 @@ public class GraphNavigator : MonoBehaviour
         // Populate with neighbors
         foreach (RouteEntry neigh in publicRoutes)
         {
-            distances[neigh.target] = new Tuple<RouteEntry, int>(neigh, 1);
+            distances[neigh.target] = new Tuple<RouteEntry, float>(neigh,
+                neigh.path.GetComponent<SplineContainer>()[0].GetLength());
             queue.Append(neigh.target);
         }
 
@@ -38,14 +39,17 @@ public class GraphNavigator : MonoBehaviour
             // Checking it's neighbors
             foreach (RouteEntry next_dest in navigator.publicRoutes)
             {
+                float length = next_dest.path.GetComponent<SplineContainer>()[0].GetLength();
+
                 // Skip if too long
-                if (distances.ContainsKey(next_dest.target) && distances[next_dest.target].Item2 >= link.Item2 + 1)
+                if (distances.ContainsKey(next_dest.target) && distances[next_dest.target].Item2 >= link.Item2 + length)
                 {
                     continue;
                 }
 
                 // Update distance
-                distances[next_dest.target] = new Tuple<RouteEntry, int>(link.Item1, link.Item2 + 1);
+                distances[next_dest.target] = new Tuple<RouteEntry, float>(link.Item1,
+                    link.Item2 + length);
             }
         }
 
