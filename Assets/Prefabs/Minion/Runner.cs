@@ -15,8 +15,7 @@ public class Runner : MonoBehaviour
             return;
         }
 
-        walker.Bind(start);
-        walker.GoTo(end);
+        walker.BindAndSend(start, finish);
     }
 
     // Update is called once per frame
@@ -28,5 +27,5 @@ public class Runner : MonoBehaviour
     [RequireComponentAttribute(typeof(GraphNavigator))]
     public GameObject start;
     [RequireComponentAttribute(typeof(GraphNavigator))]
-    public GameObject end;
+    public GameObject finish;
 }

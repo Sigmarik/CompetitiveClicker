@@ -102,6 +102,12 @@ public class GraphWalker : MonoBehaviour
         target_ = null;
     }
 
+    public void BindAndSend(GameObject start, GameObject finish)
+    {
+        Bind(start);
+        GoTo(finish);
+    }
+
     public void GoTo(GameObject target)
     {
         target_ = target;

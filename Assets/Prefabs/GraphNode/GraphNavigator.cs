@@ -31,19 +31,15 @@ public class GraphNavigator : MonoBehaviour
             var navigator = destination.GetComponent<GraphNavigator>();
             var link = distances[destination];
 
-            Debug.Log($"{navigator.publicRoutes}");
-
             foreach (RouteEntry nextDest in navigator.publicRoutes)
             {
                 SplineContainer container =
                     nextDest.path.GetComponent<SplineContainer>();
                 float length = container[0].GetLength();
-                Debug.Log($"Length: {length}");
 
                 if (distances.ContainsKey(nextDest.target) &&
                     distances[nextDest.target].Item2 <= link.Item2 + length)
                 {
-                    Debug.Log("Skipped");
                     continue;
                 }
 
