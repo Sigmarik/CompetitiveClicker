@@ -19,24 +19,28 @@ public class GraphNavigator : MonoBehaviour
         // Queue of destinations 
         var queue = new Queue<GameObject>();
 
-        // Populate with neighbours
-        foreach (RouteEntry neigh in publicRoutes) {
+        // Populate with neighbors
+        foreach (RouteEntry neigh in publicRoutes)
+        {
             distances[neigh.target] = new Tuple<RouteEntry, int>(neigh, 1);
             queue.Append(neigh.target);
         }
 
-        // Main loop (basicly BFS)
+        // Main loop (basically BFS)
         // - Kinda expensive and probably could be better (redoing other nodes work)
         // - Also using O(nodes) GetComponent
-        foreach (GameObject destination in queue) {
-            // Retiriving GraphNavigator 
+        foreach (GameObject destination in queue)
+        {
+            // Retrieving GraphNavigator 
             var navigator = destination.GetComponent<GraphNavigator>();
             var link = distances[destination];
 
-            // Checking it's neighbours
-            foreach (RouteEntry next_dest in navigator.publicRoutes) {
+            // Checking it's neighbors
+            foreach (RouteEntry next_dest in navigator.publicRoutes)
+            {
                 // Skip if too long
-                if (distances.ContainsKey(next_dest.target) && distances[next_dest.target].Item2 >= link.Item2 + 1) {
+                if (distances.ContainsKey(next_dest.target) && distances[next_dest.target].Item2 >= link.Item2 + 1)
+                {
                     continue;
                 }
 
@@ -47,7 +51,8 @@ public class GraphNavigator : MonoBehaviour
 
         // Bake into nextHop
         nextHop = new Dictionary<GameObject, RouteEntry>();
-        foreach (var destination in distances) {
+        foreach (var destination in distances)
+        {
             nextHop[destination.Key] = destination.Value.Item1;
         }
     }
