@@ -33,9 +33,9 @@ public static class SplineEx
         Vector3 tangentOut = prevVertex.TangentOut;
         Quaternion prevQuat = prevVertex.Rotation;
         var p1 = p0 + prevQuat * tangentOut;
-        Vector3 tangentIn = ithVertex.TangentOut;
+        Vector3 tangentIn = ithVertex.TangentIn;
         Quaternion ithQuat = ithVertex.Rotation;
-        var p2 = p3 - ithQuat * tangentIn;
+        var p2 = p3 + ithQuat * tangentIn;
 
         var a0 = Vector3.Lerp(p0, p1, t);
         var a1 = Vector3.Lerp(p1, p2, t);

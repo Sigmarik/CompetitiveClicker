@@ -13,47 +13,48 @@ public class GraphNavigator : MonoBehaviour
 
     void BakeRoutes()
     {
-        // Target => best nexthop & it's length
         var distances = new Dictionary<GameObject, Tuple<RouteEntry, float>>();
 
-        // Queue of destinations 
         var queue = new Queue<GameObject>();
 
-        // Populate with neighbors
         foreach (RouteEntry neigh in publicRoutes)
         {
             distances[neigh.target] = new Tuple<RouteEntry, float>(neigh,
                 neigh.path.GetComponent<SplineContainer>()[0].GetLength());
-            queue.Append(neigh.target);
+            queue.Enqueue(neigh.target);
         }
 
-        // Main loop (basically BFS)
-        // - Kinda expensive and probably could be better (redoing other nodes work)
-        // - Also using O(nodes) GetComponent
-        foreach (GameObject destination in queue)
+        while (queue.Count > 0)
         {
-            // Retrieving GraphNavigator 
+            GameObject destination = queue.First();
+            queue.Dequeue();
             var navigator = destination.GetComponent<GraphNavigator>();
             var link = distances[destination];
 
-            // Checking it's neighbors
-            foreach (RouteEntry next_dest in navigator.publicRoutes)
-            {
-                float length = next_dest.path.GetComponent<SplineContainer>()[0].GetLength();
+            Debug.Log($"{navigator.publicRoutes}");
 
-                // Skip if too long
-                if (distances.ContainsKey(next_dest.target) && distances[next_dest.target].Item2 >= link.Item2 + length)
+            foreach (RouteEntry nextDest in navigator.publicRoutes)
+            {
+                SplineContainer container =
+                    nextDest.path.GetComponent<SplineContainer>();
+                float length = container[0].GetLength();
+                Debug.Log($"Length: {length}");
+
+                if (distances.ContainsKey(nextDest.target) &&
+                    distances[nextDest.target].Item2 <= link.Item2 + length)
                 {
+                    Debug.Log("Skipped");
                     continue;
                 }
 
-                // Update distance
-                distances[next_dest.target] = new Tuple<RouteEntry, float>(link.Item1,
-                    link.Item2 + length);
+                distances[nextDest.target] =
+                    new Tuple<RouteEntry, float>(link.Item1,
+                        link.Item2 + length);
+
+                queue.Enqueue(nextDest.target);
             }
         }
 
-        // Bake into nextHop
         nextHop = new Dictionary<GameObject, RouteEntry>();
         foreach (var destination in distances)
         {
