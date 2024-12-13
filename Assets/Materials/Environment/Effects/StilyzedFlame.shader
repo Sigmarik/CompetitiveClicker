@@ -33,13 +33,11 @@ Shader "Unlit/StilyzedFlame"
 
             struct v2f
             {
-                float2 uv : TEXCOORD0;
                 UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
             };
 
             fixed4 _Color;
-            fixed4 _Color_ST;
 
             fixed _Waviness;
             fixed _WavingSpeed;
@@ -59,7 +57,6 @@ Shader "Unlit/StilyzedFlame"
                 fixed strength = max(0, v.vertex.y) * _Waviness * abs(noise(v.vertex));
                 fixed4 shift = fixed4(0, strength, 0, 1);
                 o.vertex = UnityObjectToClipPos(v.vertex + shift);
-                o.uv = TRANSFORM_TEX(v.uv, _Color);
                 UNITY_TRANSFER_FOG(o,o.vertex);
                 return o;
             }
