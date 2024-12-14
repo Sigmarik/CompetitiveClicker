@@ -1,18 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor;
-using UnityEditor.SceneManagement;
+using Mirror;
 using UnityEngine;
 using UnityEngine.Splines;
 
-public class GraphWalker : MonoBehaviour
+public class GraphWalker : NetworkBehaviour
 {
-    void Start()
-    {
-        enabled = false;
-    }
-
+    [Server]
     void Update()
     {
         if (hopInfo_.stage == HopInfo.HopStage.OnTheWay && inTransition_)
@@ -21,7 +13,7 @@ public class GraphWalker : MonoBehaviour
             onIntDeparture?.Invoke(currentNode_);
         }
 
-        hopInfo_.Update(GetNetSynchronizedTime());
+        hopInfo_.Update(Time.time);
 
         hopInfo_.GetTransform(out Vector3 position, out Vector3 tangent);
 
@@ -33,20 +25,12 @@ public class GraphWalker : MonoBehaviour
             onIntArrival?.Invoke(currentNode_);
 
             UpdateNextHop();
-
-            if (IsClient())
-            {
-                //* Play "confused" animation or something while
-                //* the client is waiting for a package from the server.
-            }
         }
     }
 
     private void UpdateNextHop()
     {
         inTransition_ = true;
-
-        if (!IsServer()) return;
 
         if (target_ == currentNode_)
         {
@@ -62,32 +46,9 @@ public class GraphWalker : MonoBehaviour
         currentNode_ = entry.target;
 
         // Set departure/arrival times
-        hopInfo_.departureTime = GetNetSynchronizedTime();
+        hopInfo_.departureTime = Time.time;
         float hopDuration = hopInfo_.spline.GetLength() / speed;
         hopInfo_.arrivalTime = hopInfo_.departureTime + hopDuration;
-
-        // TODO: NET: Synchronize hop data with clients
-    }
-
-    private bool IsServer()
-    {
-        // TODO: NET: Either implement, or remove.
-
-        return true;
-    }
-    private bool IsClient()
-    {
-        // TODO: NET: Either implement, or remove.
-
-        return false;
-    }
-
-    // Return a globally synchronized-ish time
-    private float GetNetSynchronizedTime()
-    {
-        // TODO: NET: Implement
-
-        return Time.time;
     }
 
     public void Bind(GameObject node)
