@@ -73,7 +73,9 @@ public class GraphWalker : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void RpcSetNextHop(uint current_netid, uint nexthop_netid, float arrivalTime) {
+    private void RpcSetNextHop(uint current_netid, uint nexthop_netid, float arrivalTime)
+    {
+        // Because we don't want run this code in host mode
         if (isServer) {
             return;
         }
@@ -102,13 +104,6 @@ public class GraphWalker : NetworkBehaviour
         hopInfo_.Reset();
         target_ = null;
     }
-
-    // [Server]
-    // public void BindAndSend(GameObject start, GameObject finish)
-    // {
-    //     Bind(start);
-    //     GoTo(finish);
-    // }
 
     [Server]
     public void GoTo(GameObject target)

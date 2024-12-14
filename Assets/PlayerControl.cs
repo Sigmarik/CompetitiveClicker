@@ -18,7 +18,8 @@ public class PlayerControl : NetworkBehaviour
     }
 
     [Command]
-    void CmdSpawnRunner() {
+    void CmdSpawnRunner()
+    {
         var runnerStart = GameObject.Find("Cube");
         var runnerEnd = GameObject.Find("Sphere");
         
