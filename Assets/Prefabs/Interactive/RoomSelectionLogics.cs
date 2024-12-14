@@ -7,8 +7,9 @@ public class RoomSelectionLogics : MonoBehaviour
     private void Start()
     {
         objectRenderer_ = GetComponent<Renderer>();
-        objectRenderer_.material.SetFloat("_Top", 0.0f);
-        currentLevel_ = 0.0f;
+        currentLevel_ = lowestPoint;
+        targetLevel_ = currentLevel_;
+        objectRenderer_.material.SetFloat("_Top", currentLevel_);
     }
 
     public void SetTeamColor(Color color)
@@ -54,7 +55,7 @@ public class RoomSelectionLogics : MonoBehaviour
 
     private void OnMouseExit()
     {
-        PlayAnimation(0.0f);
+        PlayAnimation(lowestPoint);
     }
 
     private void OnMouseDown()
@@ -69,7 +70,9 @@ public class RoomSelectionLogics : MonoBehaviour
     private float targetLevel_ = 0.0f;
     private Renderer objectRenderer_;
 
-    public float animDuration = 0.1f;
+    public float animDuration = 0.2f;
+
+    public float lowestPoint = 0.5f;
 
     public Color teamColor = Color.white;
 }
