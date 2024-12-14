@@ -110,8 +110,8 @@ public class CameraMovement : MonoBehaviour
             return;
         }
 
-        float fraction = (transform.position.z - viewLevel) / transform.forward.y;
-        anchorPoint_ += flattened * fraction;
+        float fraction = (transform.position.y - viewLevel) / transform.forward.y;
+        anchorPoint_ += -flattened * fraction;
 
         deltaPosition_ = transform.position - anchorPoint_;
     }
