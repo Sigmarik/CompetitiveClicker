@@ -4,16 +4,19 @@ using UnityEngine.Splines;
 
 public class GraphWalker : NetworkBehaviour
 {
-    [Server]
     void Update()
     {
+        if (!initialized_) {
+            return;
+        }
+
         if (hopInfo_.stage == HopInfo.HopStage.OnTheWay && inTransition_)
         {
             inTransition_ = false;
             onIntDeparture?.Invoke(currentNode_);
         }
 
-        hopInfo_.Update(Time.time);
+        hopInfo_.Update(GetNetSynchronizedTime());
 
         hopInfo_.GetTransform(out Vector3 position, out Vector3 tangent);
 
@@ -25,12 +28,24 @@ public class GraphWalker : NetworkBehaviour
             onIntArrival?.Invoke(currentNode_);
 
             UpdateNextHop();
+
+            if (isClient) {
+                //* Play "confused" animation or something while
+                //* the client is waiting for a package from the server.
+            }
         }
+    }
+
+    private float GetNetSynchronizedTime()
+    {
+        return (float) NetworkTime.time;
     }
 
     private void UpdateNextHop()
     {
         inTransition_ = true;
+
+        if (!isServer) return;
 
         if (target_ == currentNode_)
         {
@@ -43,14 +58,39 @@ public class GraphWalker : NetworkBehaviour
         GraphNavigator.RouteEntry entry = currentNode_.GetComponent<GraphNavigator>().NextHopTo(target_);
         hopInfo_.ScrapFrom(entry);
 
+        var current_netid = currentNode_.GetComponent<NetworkIdentity>().netId;
+
         currentNode_ = entry.target;
 
         // Set departure/arrival times
-        hopInfo_.departureTime = Time.time;
+        hopInfo_.departureTime = GetNetSynchronizedTime();
         float hopDuration = hopInfo_.spline.GetLength() / speed;
         hopInfo_.arrivalTime = hopInfo_.departureTime + hopDuration;
+
+        // Send nexthop info
+        var nexthop_netid = entry.target.GetComponent<NetworkIdentity>().netId;
+        RpcSetNextHop(current_netid, nexthop_netid, hopInfo_.arrivalTime);
     }
 
+    [ClientRpc]
+    private void RpcSetNextHop(uint current_netid, uint nexthop_netid, float arrivalTime) {
+        if (isServer) {
+            return;
+        }
+
+        initialized_ = true;
+
+        currentNode_ = NetworkClient.spawned[current_netid].gameObject;
+        var next_hop = NetworkClient.spawned[nexthop_netid].gameObject;
+        GraphNavigator.RouteEntry entry = currentNode_.GetComponent<GraphNavigator>().NextHopTo(next_hop);
+        hopInfo_.ScrapFrom(entry);
+
+        currentNode_ = entry.target;
+        hopInfo_.departureTime = GetNetSynchronizedTime();
+        hopInfo_.arrivalTime = arrivalTime;
+    }
+
+    [Server]
     public void Bind(GameObject node)
     {
         if (currentNode_ != null)
@@ -63,12 +103,14 @@ public class GraphWalker : NetworkBehaviour
         target_ = null;
     }
 
-    public void BindAndSend(GameObject start, GameObject finish)
-    {
-        Bind(start);
-        GoTo(finish);
-    }
+    // [Server]
+    // public void BindAndSend(GameObject start, GameObject finish)
+    // {
+    //     Bind(start);
+    //     GoTo(finish);
+    // }
 
+    [Server]
     public void GoTo(GameObject target)
     {
         target_ = target;
@@ -77,7 +119,7 @@ public class GraphWalker : NetworkBehaviour
 
         UpdateNextHop();
 
-        enabled = true;
+        initialized_ = true;
     }
 
     [System.Serializable]
@@ -136,7 +178,7 @@ public class GraphWalker : NetworkBehaviour
 
         public void Update(float time)
         {
-            progress = (time - departureTime) / arrivalTime;
+            progress = (time - departureTime) / (arrivalTime - departureTime);
 
             if (progress > 1.0f)
             {
@@ -158,6 +200,8 @@ public class GraphWalker : NetworkBehaviour
     private GameObject currentNode_;
     private HopInfo hopInfo_;
     private bool inTransition_ = true;
+
+    private bool initialized_ = false;
 
     public delegate void OnArrival(GameObject target);
     public delegate void OnDeparture(GameObject target);

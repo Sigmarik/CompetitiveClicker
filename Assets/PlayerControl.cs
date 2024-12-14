@@ -19,16 +19,17 @@ public class PlayerControl : NetworkBehaviour
 
     [Command]
     void CmdSpawnRunner() {
+        var runnerStart = GameObject.Find("Cube");
+        var runnerEnd = GameObject.Find("Sphere");
+        
         // Setup runner
         var runner_obj = Instantiate(runnerPrefab);
         var runner = runner_obj.GetComponent<Runner>();
-
-        var runnerStart = GameObject.Find("Cube");
-        var runnerEnd = GameObject.Find("Sphere");
-
-        runner.Init(runnerStart, runnerEnd);
-
+        runner.Init(runnerStart);
         // Spawn on all nodes
         NetworkServer.Spawn(runner_obj);
+
+        // Begin walking
+        runner.SendTo(runnerEnd);
     }
 }

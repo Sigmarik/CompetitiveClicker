@@ -6,7 +6,7 @@ using UnityEngine;
 public class Runner : NetworkBehaviour
 {
     [Server] 
-    public void Init(GameObject start, GameObject finish)
+    public void Init(GameObject start)
     {
         TryGetComponent<GraphWalker>(out GraphWalker walker);
 
@@ -16,6 +16,20 @@ public class Runner : NetworkBehaviour
             return;
         }
 
-        walker.BindAndSend(start, finish);
+        walker.Bind(start);
+    }
+
+    [Server] 
+    public void SendTo(GameObject finish)
+    {
+        TryGetComponent<GraphWalker>(out GraphWalker walker);
+
+        if (walker == null)
+        {
+            Debug.LogError("Missing `GraphWalker` component.");
+            return;
+        }
+
+        walker.GoTo(finish);
     }
 }
