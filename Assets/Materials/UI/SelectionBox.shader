@@ -5,6 +5,8 @@ Shader "Unlit/SelectionBox"
         _Color ("Color", Color) = (1.0, 1.0, 1.0, 1.0)
         _Transparency ("Transparency", Range(0, 1)) = 0.5
         _Top ("Top Level", Range(0, 1)) = 1.0
+        _Scale ("Scale", Float) = 1.0
+        [Toggle] _useWorldCoords("Use World Coordinates", Float) = 1
     }
     SubShader
     {
@@ -33,6 +35,7 @@ Shader "Unlit/SelectionBox"
 
             struct v2f
             {
+                float2 uv : TEXCOORD0;
                 UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
                 float4 local_pos : TEXCOORD1;
@@ -42,23 +45,29 @@ Shader "Unlit/SelectionBox"
             float4 _Color;
             float _Transparency;
             float _Top;
+            float _Scale;
+            float _useWorldCoords;
 
             v2f vert (appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
+                o.uv = v.uv;
                 UNITY_TRANSFER_FOG(o,o.vertex);
                 o.local_pos = v.vertex * 100.0;
-                o.world_pos = mul(unity_ObjectToWorld, v.vertex);
+                float4 local_pos = v.vertex;
+                local_pos.w = _useWorldCoords;
+                o.world_pos = mul(unity_ObjectToWorld, local_pos);
+                o.world_pos.w = 1.0;
                 return o;
             }
 
-            float waves(float level, float4 local_pos, float4 world_pos, float anim_direction, int iteration) {
+            float waves(float level, float local_height, float4 world_pos, float anim_direction, int iteration) {
                 float true_level = level - 0.3 * (
-                        sin(world_pos.x * (1.3 + iteration * 0.8) - _Time * 60.0 * anim_direction) +
-                        cos(world_pos.z * (1.3 + iteration * 0.8) - _Time * 60.0 * anim_direction) + 2.0
+                        sin(world_pos.x * (1.3 + iteration * 0.8) * _Scale - _Time * 60.0 * anim_direction) +
+                        cos(world_pos.z * (1.3 + iteration * 0.8) * _Scale - _Time * 60.0 * anim_direction) + 2.0
                     ) / 4.0;
-                return true_level < local_pos.z ? 0.0 : 1.0;
+                return true_level < local_height ? 0.0 : 1.0;
             }
 
             fixed4 frag (v2f i) : SV_Target
@@ -68,9 +77,9 @@ Shader "Unlit/SelectionBox"
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
                 col.a *= 
-                waves(_Top * 3 / 3, i.local_pos, i.world_pos,  1.0, 0) * 1 +
-                waves(_Top * 2 / 3, i.local_pos, i.world_pos, -1.0, 1) * 2 + 
-                waves(_Top * 1 / 3, i.local_pos, i.world_pos,  1.0, 1) * 3; 
+                waves(_Top * 3 / 3, i.uv.y, i.world_pos,  1.0, 0) * 1 +
+                waves(_Top * 2 / 3, i.uv.y, i.world_pos, -1.0, 1) * 2 + 
+                waves(_Top * 1 / 3, i.uv.y, i.world_pos,  1.0, 1) * 3; 
                 col.a *= _Transparency / 6;
                 return col;
             }
