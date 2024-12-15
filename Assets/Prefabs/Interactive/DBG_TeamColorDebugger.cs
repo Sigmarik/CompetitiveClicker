@@ -12,7 +12,6 @@ public class DBG_TeamColorDebugger : MonoBehaviour
 
     private void OnMouseDown()
     {
-        Debug.Log("Clicked");
         selector_.SetTeamColor(Random.ColorHSV(0.0f, 1.0f));
     }
 

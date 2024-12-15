@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 
+// TODO: Rename teams
 public enum Team
 {
     Spiders,
@@ -10,8 +11,8 @@ public enum Team
 
 public class Score
 {
-    Team team = Team.Spiders;
-    uint score = 0;
+    public Team team = Team.Spiders;
+    public uint score = 0;
 
     public bool Teamed()
     {
@@ -82,7 +83,7 @@ public class Score
         // The bigger this variable is, the slower it is to gain levels
         const uint SCORE_DIVISOR = 10;
 
-        if (Teamed())
+        if (!Teamed())
         {
             return 0;
         }
