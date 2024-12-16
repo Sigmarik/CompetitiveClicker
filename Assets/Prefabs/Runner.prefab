@@ -120,7 +120,6 @@ GameObject:
   - component: {fileID: 6011353910796560841}
   - component: {fileID: 1275539857092294419}
   - component: {fileID: 6483473307976460040}
-  - component: {fileID: -516771603914266394}
   m_Layer: 0
   m_Name: Runner
   m_TagString: Untagged
@@ -247,6 +246,26 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  currentNode: {fileID: 0}
+  hopInfo:
+    splineObject: {fileID: 0}
+    spline:
+      m_EditModeType: 1
+      m_Knots: []
+      m_MetaData: []
+      m_Closed: 0
+      m_IntData:
+        m_Data: []
+      m_FloatData:
+        m_Data: []
+      m_Float4Data:
+        m_Data: []
+      m_ObjectData:
+        m_Data: []
+    arrivalTime: 0
+    departureTime: 0
+    progress: 0
+    splineInverted: 0
   speed: 1
 --- !u!114 &6483473307976460040
 MonoBehaviour:
@@ -265,36 +284,3 @@ MonoBehaviour:
   serverOnly: 0
   visibility: 0
   hasSpawned: 0
---- !u!114 &-516771603914266394
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7308667087325410626}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ff3ba0becae47b8b9381191598957c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 1
-  syncMode: 0
-  syncInterval: 0
-  target: {fileID: 7798491687526611184}
-  syncPosition: 1
-  syncRotation: 1
-  syncScale: 0
-  onlySyncOnChange: 1
-  compressRotation: 1
-  interpolatePosition: 1
-  interpolateRotation: 1
-  interpolateScale: 1
-  coordinateSpace: 0
-  timelineOffset: 1
-  showGizmos: 0
-  showOverlay: 0
-  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
-  onlySyncOnChangeCorrectionMultiplier: 2
-  rotationSensitivity: 0.01
-  positionPrecision: 0.01
-  scalePrecision: 0.01

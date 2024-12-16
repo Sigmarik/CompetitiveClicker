@@ -95,12 +95,12 @@ public class Player : NetworkBehaviour
     void TryEscape()
     {
         if (IsMoving())                   return;
-        if (GetCurrentNodeTeam() == team) return;
+        if (GetCurrentNodeTeam() == team_) return;
 
         //--------------------------------------------------
 
         GraphNavigator navigator = graphWalker_.currentNode.GetComponent<GraphNavigator>();
-        GameObject    escapeTile = navigator.FindTeamNode(team);
+        GameObject    escapeTile = navigator.FindTeamNode(team_);
 
         if (escapeTile == null) { Die(); return; }
         graphWalker_.GoTo(escapeTile);
