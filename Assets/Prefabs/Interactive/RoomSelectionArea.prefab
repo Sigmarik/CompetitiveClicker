@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4481605347144854983}
   - component: {fileID: 4313998212127496527}
   - component: {fileID: 5751583470648823235}
+  - component: {fileID: 2819537024479929547}
   m_Layer: 0
   m_Name: RoomSelectionArea
   m_TagString: Untagged
@@ -119,4 +120,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animDuration: 0.1
+  lowestPoint: 0.5
   teamColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &2819537024479929547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5370930251791486256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ed2e02687d4fb8489cbcecbcd2a16cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rooms: []
+  submersionVector: {x: 0, y: -10, z: 0}
+  animDuration: 0.2

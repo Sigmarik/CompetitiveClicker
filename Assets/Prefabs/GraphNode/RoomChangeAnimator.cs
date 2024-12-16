@@ -17,6 +17,8 @@ public class RoomChangeAnimator : ScoreAnimator
             info.root.transform.position = info.hiddenPosition;
             info.root.SetActive(false);
         }
+
+        selector_ = GetComponent<RoomSelectionLogics>();
     }
 
     void RegisterInfo(RoomInfo info, Team team, int level)
@@ -57,6 +59,8 @@ public class RoomChangeAnimator : ScoreAnimator
     protected override void PresetAnimation(Score newScore)
     {
         RoomInfo newInfo;
+
+        selector_.SetTeamColor(newScore.GetColor());
 
         if (!bakedRooms_.ContainsKey(newScore.team))
         {
@@ -188,4 +192,6 @@ public class RoomChangeAnimator : ScoreAnimator
     private RoomInfo currentRoom_ = new RoomInfo();
     private RoomInfo lastRoom_ = new RoomInfo();
     private float animTimeStart_ = -9999.0f;
+
+    private RoomSelectionLogics selector_;
 }

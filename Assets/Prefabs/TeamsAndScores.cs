@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 // TODO: Rename teams
 public enum Team
@@ -26,6 +27,25 @@ public class Score
         {Team.Wizards, "Wizards"},
         {Team.Goblins, "Goblins"}
     };
+
+    public static readonly Dictionary<Team, Color> TEAM_COLORS =
+    new Dictionary<Team, Color>{
+        {Team.Skeletons, new Color(0.9396226f, 0.8564242f, 0.5513634f)},
+        {Team.Spiders, new Color(0.03493261f, 1.0f, 0.0f)},
+        {Team.Wizards, new Color(1.0f, 0.0f, 0.9592928f)},
+        {Team.Goblins, new Color(0.3215685f, 0.9019516f, 1.0f)}
+    };
+    public static readonly Color NEUTRAL_COLOR = new Color(0.75f, 0.75f, 0.75f);
+
+    public Color GetColor()
+    {
+        if (!Teamed())
+        {
+            return NEUTRAL_COLOR;
+        }
+
+        return TEAM_COLORS[team];
+    }
 
     public string HolderName()
     {
