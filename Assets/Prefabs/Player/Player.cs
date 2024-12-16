@@ -1,5 +1,4 @@
 using Mirror;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 
 // КАПСОМ выделены методы, которых не существует,
@@ -34,6 +33,13 @@ public class Player : NetworkBehaviour
         SaveGraphWalker();
         TeleportTo(start_node);
         team_ = team;
+        RpcInit(start_node);
+    }
+
+    [ClientRpc]
+    void RpcInit(GameObject start_node) {
+        SaveGraphWalker();
+        TeleportTo(start_node);
     }
 
     [Command]

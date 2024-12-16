@@ -89,7 +89,6 @@ public class GraphWalker : NetworkBehaviour
         hopInfo.arrivalTime = arrivalTime;
     }
 
-    [Server]
     public void Bind(GameObject node)
     {
         if (currentNode != null)

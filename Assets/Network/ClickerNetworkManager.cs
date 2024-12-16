@@ -40,10 +40,11 @@ public class ClickerNetworkManager : NetworkManager
         Player player = gameobject.GetComponent<Player>();
 
         // Currently anyone starts at cude
-        var runnerEnd = GameObject.Find("Cube");
-        player.Init(runnerEnd, Team.Goblins);
+        var playerPos = GameObject.Find("Cube");
 
         // call this to use this gameobject as the primary controller
         NetworkServer.AddPlayerForConnection(conn, gameobject);
+
+        player.Init(playerPos, Team.Goblins);
     }
 }
