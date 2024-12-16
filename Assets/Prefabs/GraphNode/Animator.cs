@@ -11,7 +11,7 @@ public class ScoreAnimator : MonoBehaviour
     void Update()
     {
         bool running = TickAnimation();
-        if (running)
+        if (!running)
         {
             DisableUpdates();
         }
