@@ -8,9 +8,6 @@ public class RimExplosion : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //! TODO: This is a debug line!
-        collapseInwards = false;
-
         if (!effectCopy_)
         {
             enabled = false;
@@ -67,7 +64,6 @@ public class RimExplosion : MonoBehaviour
         enabled = true;
         deathTime_ = Time.time;
         ogScale_ = transform.localScale;
-        // Debug.Log("Exploded");
     }
 
     private bool effectCopy_ = false;
