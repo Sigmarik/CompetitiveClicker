@@ -37,11 +37,11 @@ public class ClickerNetworkManager : NetworkManager
 
         // Apply data from the message however appropriate for your game
         // Typically Player would be a component you write with syncvars or properties
-        PlayerControl player = gameobject.GetComponent<PlayerControl>();
+        Player player = gameobject.GetComponent<Player>();
 
-        // TODO
-
-        gameobject.transform.position = new Vector3(0.0f, 4.0f, 2.0f);
+        // Currently anyone starts at cude
+        var runnerEnd = GameObject.Find("Cube");
+        player.Init(runnerEnd, Team.Goblins);
 
         // call this to use this gameobject as the primary controller
         NetworkServer.AddPlayerForConnection(conn, gameobject);

@@ -1,30 +1,51 @@
+using Mirror;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 // КАПСОМ выделены методы, которых не существует,
 // но которые нужно бы добавить
-public class Player : MonoBehaviour
+public class Player : NetworkBehaviour
 {
-    public Team team;
+    [SyncVar]
+    private Team team_;
+    public GameObject runnerPrefab;
 
     private GraphWalker graphWalker_;
 
     //--------------------------------------------------
 
-    void Start()
-    {
-        
-    }
-
     void Update()
     {
+        if (!isLocalPlayer) return;
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            var runnerEnd = GameObject.Find("Sphere");
+        
+            TrySpawnMinion(runnerEnd);
+        }
     }
 
-    void Init(GameObject start_node, Team team)
+    [Server]
+    public void Init(GameObject start_node, Team team)
     {
         SaveGraphWalker();
         TeleportTo(start_node);
-        team = team;
+        team_ = team;
+    }
+
+    [Command]
+    void CmdSpawnMinion(GameObject runnerStart, GameObject runnerEnd)
+    {
+        // Setup runner
+        var runner_obj = Instantiate(runnerPrefab);
+        var runner = runner_obj.GetComponent<Runner>();
+        runner.Init(runnerStart);
+        // Spawn on all nodes
+        NetworkServer.Spawn(runner_obj);
+
+        // Begin walking
+        runner.SendTo(runnerEnd);
     }
 
     private void SaveGraphWalker()
@@ -45,16 +66,16 @@ public class Player : MonoBehaviour
     void TryGoTo(GameObject target)
     {
         // TODO: поправить получение команды цели
-        if (!target.GetComponent<SCORE_HOLDER>()) return;
-        if (team != target.GetComponent<SCORE_HOLDER>().TEAM) return; // can only go to my node
+        // if (!target.GetComponent<SCORE_HOLDER>()) return;
+        // if (team != target.GetComponent<SCORE_HOLDER>().TEAM) return; // can only go to my node
         graphWalker_.GoTo(target);
     }
 
     void TeleportTo(GameObject target)
     {
-        graphWalker_.Bind(place);
-        target_pos = target.GetComponent<Transform>().position;
-        GetComponent<Transform>.SetPosition(target_pos);
+        graphWalker_.Bind(target);
+        var target_pos = target.GetComponent<Transform>().position;
+        GetComponent<Transform>().position = target_pos;
     }
 
     // spawns minion under player
@@ -62,10 +83,10 @@ public class Player : MonoBehaviour
     void TrySpawnMinion(GameObject target)
     {
         // TODO: поправить состояния движения
-        if (graphWalker_.hopInfo.stage == OnTheWay) return; // can't spawn minion while moving
-        if (!target.GetComponent<SCORE_HOLDER>()) return;             // can only go to enemy node
-        if (team != target.GetComponent<SCORE_HOLDER>().TEAM) return; // can only go to enemy node
-        CmdSpawnMinion(graphWalker_.currentNode_, target);
+        if (graphWalker_.hopInfo.stage == GraphWalker.HopInfo.HopStage.OnTheWay) return; // can't spawn minion while moving
+        // if (!target.GetComponent<SCORE_HOLDER>()) return;             // can only go to enemy node
+        // if (team != target.GetComponent<SCORE_HOLDER>().TEAM) return; // can only go to enemy node
+        CmdSpawnMinion(graphWalker_.currentNode, target);
     }
 
     void Escape()
