@@ -43,9 +43,7 @@ public class Runner : NetworkBehaviour
     public void OnArrival(GameObject target)
     {
         if (TryGetComponent<AnimationController>(out AnimationController animator))
-        {
             animator.SetSuccessful(true);
-        }
 
         if (target == null)
         {
