@@ -59,6 +59,11 @@ public class RimExplosion : MonoBehaviour
 
     }
 
+    public void OnKilled()
+    {
+        Destroy(gameObject);
+    }
+
     void Explode()
     {
         enabled = true;
