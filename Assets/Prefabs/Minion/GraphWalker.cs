@@ -10,7 +10,7 @@ public class GraphWalker : MonoBehaviour
 {
     void Start()
     {
-        enabled = false;
+        //enabled = false;
     }
 
     void Update()
