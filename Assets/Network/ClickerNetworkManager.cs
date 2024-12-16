@@ -45,6 +45,6 @@ public class ClickerNetworkManager : NetworkManager
         // call this to use this gameobject as the primary controller
         NetworkServer.AddPlayerForConnection(conn, gameobject);
 
-        player.Init(playerPos, Team.Goblins);
+        player.Init(playerPos, message.team);
     }
 }
