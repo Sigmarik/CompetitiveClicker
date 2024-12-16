@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 public enum ResourceType
 {
     Gold,
@@ -12,7 +14,7 @@ public class ResourceContainer
 
     //--------------------------------------------------
 
-    ResourceContainer(ResourceType type)
+    public ResourceContainer(ResourceType type)
     {
         resourceType = type;
     }
@@ -24,7 +26,7 @@ public class ResourceContainer
 
     public void Add(uint change)
     {
-        score += change;
+        amount_ += change;
     }
 
     public void Substract(uint change)
@@ -38,8 +40,8 @@ public class ResourceContainer
         amount_ = newAmount;
     }
 
-    private static readonly Dictionary<Team, string> RESOURCE_NAMES =
-    new Dictionary<Team, string>{
+    private static readonly Dictionary<ResourceType, string> RESOURCE_NAMES =
+    new Dictionary<ResourceType, string>{
         {ResourceType.Gold,   "Gold"},
         {ResourceType.Silver, "Silver"},
         {ResourceType.Copper, "Copper"},

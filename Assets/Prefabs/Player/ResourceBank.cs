@@ -25,7 +25,7 @@ public class ResourceBank : MonoBehaviour
 
     public void Subtract(ResourceType type, uint change)
     {
-        containers_[type].Subtract(change);
+        containers_[type].Substract(change);
     }
 
     public void Set(ResourceType type, uint newAmount)

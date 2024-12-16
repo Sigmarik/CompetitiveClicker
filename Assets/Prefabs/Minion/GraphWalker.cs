@@ -120,7 +120,7 @@ public class GraphWalker : MonoBehaviour
     }
 
     [System.Serializable]
-    struct HopInfo
+    public struct HopInfo
     {
         public enum HopStage
         {

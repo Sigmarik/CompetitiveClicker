@@ -5,7 +5,6 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public Team team;
-
     private GraphWalker graphWalker_;
 
     //--------------------------------------------------
@@ -20,11 +19,11 @@ public class Player : MonoBehaviour
 
     }
 
-    void Init(GameObject start_node, Team team)
+    void Init(GameObject startNode, Team newTeam)
     {
         SaveGraphWalker();
-        TeleportTo(start_node);
-        team = team;
+        TeleportTo(startNode);
+        team = newTeam;
     }
 
     private void SaveGraphWalker()
@@ -40,41 +39,42 @@ public class Player : MonoBehaviour
         graphWalker_ = walker;
     }
 
-    // checks target node team
-    // and goes there
+    // goes to node if the teams match
     void TryGoTo(GameObject target)
     {
-        // TODO: поправить получение команды цели
-        if (!target.GetComponent<SCORE_HOLDER>()) return;
-        if (team != target.GetComponent<SCORE_HOLDER>().TEAM) return; // can only go to my node
+        // TODO: uncomment
+        // if (team != target.GetComponent<SCORE_HOLDER>().TEAM) return;
         graphWalker_.GoTo(target);
     }
 
     void TeleportTo(GameObject target)
     {
-        graphWalker_.Bind(place);
-        target_pos = target.GetComponent<Transform>().position;
-        GetComponent<Transform>.SetPosition(target_pos);
+        graphWalker_.Bind(target);
+        Vector3 target_pos = target.GetComponent<Transform>().position;
+        GetComponent<Transform>().position = target_pos;
     }
 
     // spawns minion under player
     // works only when player is standing still
     void TrySpawnMinion(GameObject target)
     {
-        // TODO: поправить состояния движения
-        if (graphWalker_.hopInfo.stage == OnTheWay) return; // can't spawn minion while moving
-        if (!target.GetComponent<SCORE_HOLDER>()) return;             // can only go to enemy node
-        if (team != target.GetComponent<SCORE_HOLDER>().TEAM) return; // can only go to enemy node
-        CmdSpawnMinion(graphWalker_.currentNode_, target);
+        if (graphWalker_.hopInfo.stage == GraphWalker.HopInfo.HopStage.OnTheWay) return;
+        // TODO: uncomment
+        // if (team != target.GetComponent<SCORE_HOLDER>().TEAM) return;
+        //  CmdSpawnMinion(graphWalker_.currentNode_, target);
     }
 
     void Escape()
     {
+        GraphNavigator navigator = graphWalker_.currentNode.GetComponent<GraphNavigator>();
+        GameObject    escapeTile = navigator.FindTeamNode(team);
 
+        if (escapeTile == null) { Die(); return; }
+        graphWalker_.GoTo(escapeTile);
     }
 
-    void Lose()
+    void Die()
     {
-        
+        Destroy(gameObject);
     }
 }
