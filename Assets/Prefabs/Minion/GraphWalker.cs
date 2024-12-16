@@ -1,20 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor;
-using UnityEditor.SceneManagement;
+using Mirror;
 using UnityEngine;
 using UnityEngine.Splines;
 
-public class GraphWalker : MonoBehaviour
+public class GraphWalker : NetworkBehaviour
 {
-    void Start()
-    {
-        //enabled = false;
-    }
-
     void Update()
     {
+        if (!initialized_) {
+            return;
+        }
+
         if (hopInfo.stage == HopInfo.HopStage.OnTheWay && inTransition_)
         {
             inTransition_ = false;
@@ -34,19 +29,23 @@ public class GraphWalker : MonoBehaviour
 
             UpdateNextHop();
 
-            if (IsClient())
-            {
+            if (isClient) {
                 //* Play "confused" animation or something while
                 //* the client is waiting for a package from the server.
             }
         }
     }
 
+    private float GetNetSynchronizedTime()
+    {
+        return (float) NetworkTime.time;
+    }
+
     private void UpdateNextHop()
     {
         inTransition_ = true;
 
-        if (!IsServer()) return;
+        if (!isServer) return;
 
         if (target_ == currentNode)
         {
@@ -59,6 +58,7 @@ public class GraphWalker : MonoBehaviour
         GraphNavigator.RouteEntry entry = currentNode.GetComponent<GraphNavigator>().NextHopTo(target_);
         hopInfo.ScrapFrom(entry);
 
+        var current_prev = currentNode;
         currentNode = entry.target;
 
         // Set departure/arrival times
@@ -66,30 +66,30 @@ public class GraphWalker : MonoBehaviour
         float hopDuration = hopInfo.spline.GetLength() / speed;
         hopInfo.arrivalTime = hopInfo.departureTime + hopDuration;
 
-        // TODO: NET: Synchronize hop data with clients
+        // Send nexthop info
+        RpcSetNextHop(current_prev, entry.target, hopInfo.arrivalTime);
     }
 
-    private bool IsServer()
+    [ClientRpc]
+    private void RpcSetNextHop(GameObject current_, GameObject nexthop, float arrivalTime)
     {
-        // TODO: NET: Either implement, or remove.
+        // Because we don't want run this code in host mode
+        if (isServer) {
+            return;
+        }
 
-        return true;
-    }
-    private bool IsClient()
-    {
-        // TODO: NET: Either implement, or remove.
+        initialized_ = true;
 
-        return false;
-    }
+        currentNode = current_;
+        GraphNavigator.RouteEntry entry = currentNode.GetComponent<GraphNavigator>().NextHopTo(nexthop);
+        hopInfo.ScrapFrom(entry);
 
-    // Return a globally synchronized-ish time
-    private float GetNetSynchronizedTime()
-    {
-        // TODO: NET: Implement
-
-        return Time.time;
+        currentNode = entry.target;
+        hopInfo.departureTime = GetNetSynchronizedTime();
+        hopInfo.arrivalTime = arrivalTime;
     }
 
+    [Server]
     public void Bind(GameObject node)
     {
         if (currentNode != null)
@@ -102,12 +102,7 @@ public class GraphWalker : MonoBehaviour
         target_ = null;
     }
 
-    public void BindAndSend(GameObject start, GameObject finish)
-    {
-        Bind(start);
-        GoTo(finish);
-    }
-
+    [Server]
     public void GoTo(GameObject target)
     {
         target_ = target;
@@ -116,7 +111,7 @@ public class GraphWalker : MonoBehaviour
 
         UpdateNextHop();
 
-        enabled = true;
+        initialized_ = true;
     }
 
     [System.Serializable]
@@ -175,7 +170,7 @@ public class GraphWalker : MonoBehaviour
 
         public void Update(float time)
         {
-            progress = (time - departureTime) / arrivalTime;
+            progress = (time - departureTime) / (arrivalTime - departureTime);
 
             if (progress > 1.0f)
             {
@@ -197,6 +192,8 @@ public class GraphWalker : MonoBehaviour
     public GameObject currentNode;
     public HopInfo hopInfo;
     private bool inTransition_ = true;
+
+    private bool initialized_ = false;
 
     public delegate void OnArrival(GameObject target);
     public delegate void OnDeparture(GameObject target);

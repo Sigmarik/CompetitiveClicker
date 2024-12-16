@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
-public class Runner : MonoBehaviour
+public class Runner : NetworkBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [Server] 
+    public void Init(GameObject start)
     {
         TryGetComponent<GraphWalker>(out GraphWalker walker);
 
@@ -15,17 +16,20 @@ public class Runner : MonoBehaviour
             return;
         }
 
-        walker.BindAndSend(start, finish);
+        walker.Bind(start);
     }
 
-    // Update is called once per frame
-    void Update()
+    [Server] 
+    public void SendTo(GameObject finish)
     {
+        TryGetComponent<GraphWalker>(out GraphWalker walker);
 
+        if (walker == null)
+        {
+            Debug.LogError("Missing `GraphWalker` component.");
+            return;
+        }
+
+        walker.GoTo(finish);
     }
-
-    [RequireComponentAttribute(typeof(GraphNavigator))]
-    public GameObject start;
-    [RequireComponentAttribute(typeof(GraphNavigator))]
-    public GameObject finish;
 }

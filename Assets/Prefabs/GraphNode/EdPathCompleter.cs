@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEditor;
 
 [CustomEditor(typeof(GraphNavigator))]
@@ -12,3 +13,4 @@ public class MyComponentEditor : Editor
         navigator.OnEditorUpdate();
     }
 }
+#endif
