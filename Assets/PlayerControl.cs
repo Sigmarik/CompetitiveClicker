@@ -13,16 +13,16 @@ public class PlayerControl : NetworkBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            CmdSpawnRunner();
+            var runnerStart = GameObject.Find("Cube");
+            var runnerEnd = GameObject.Find("Sphere");
+        
+            CmdSpawnRunner(runnerStart, runnerEnd);
         }
     }
 
     [Command]
-    void CmdSpawnRunner()
+    void CmdSpawnRunner(GameObject runnerStart, GameObject runnerEnd)
     {
-        var runnerStart = GameObject.Find("Cube");
-        var runnerEnd = GameObject.Find("Sphere");
-        
         // Setup runner
         var runner_obj = Instantiate(runnerPrefab);
         var runner = runner_obj.GetComponent<Runner>();

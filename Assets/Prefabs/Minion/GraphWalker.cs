@@ -58,8 +58,7 @@ public class GraphWalker : NetworkBehaviour
         GraphNavigator.RouteEntry entry = currentNode_.GetComponent<GraphNavigator>().NextHopTo(target_);
         hopInfo_.ScrapFrom(entry);
 
-        var current_netid = currentNode_.GetComponent<NetworkIdentity>().netId;
-
+        var current_prev = currentNode_;
         currentNode_ = entry.target;
 
         // Set departure/arrival times
@@ -68,12 +67,11 @@ public class GraphWalker : NetworkBehaviour
         hopInfo_.arrivalTime = hopInfo_.departureTime + hopDuration;
 
         // Send nexthop info
-        var nexthop_netid = entry.target.GetComponent<NetworkIdentity>().netId;
-        RpcSetNextHop(current_netid, nexthop_netid, hopInfo_.arrivalTime);
+        RpcSetNextHop(current_prev, entry.target, hopInfo_.arrivalTime);
     }
 
     [ClientRpc]
-    private void RpcSetNextHop(uint current_netid, uint nexthop_netid, float arrivalTime)
+    private void RpcSetNextHop(GameObject current_, GameObject nexthop, float arrivalTime)
     {
         // Because we don't want run this code in host mode
         if (isServer) {
@@ -82,9 +80,8 @@ public class GraphWalker : NetworkBehaviour
 
         initialized_ = true;
 
-        currentNode_ = NetworkClient.spawned[current_netid].gameObject;
-        var next_hop = NetworkClient.spawned[nexthop_netid].gameObject;
-        GraphNavigator.RouteEntry entry = currentNode_.GetComponent<GraphNavigator>().NextHopTo(next_hop);
+        currentNode_ = current_;
+        GraphNavigator.RouteEntry entry = currentNode_.GetComponent<GraphNavigator>().NextHopTo(nexthop);
         hopInfo_.ScrapFrom(entry);
 
         currentNode_ = entry.target;
