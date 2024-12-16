@@ -1,113 +1,107 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor;
-using UnityEditor.SceneManagement;
+using Mirror;
 using UnityEngine;
 using UnityEngine.Splines;
 
-public class GraphWalker : MonoBehaviour
+public class GraphWalker : NetworkBehaviour
 {
-    void Start()
-    {
-        enabled = false;
-    }
-
     void Update()
     {
-        if (hopInfo_.stage == HopInfo.HopStage.OnTheWay && inTransition_)
-        {
-            inTransition_ = false;
-            onIntDeparture?.Invoke(currentNode_);
+        if (!initialized_) {
+            return;
         }
 
-        hopInfo_.Update(GetNetSynchronizedTime());
+        if (hopInfo.stage == HopInfo.HopStage.OnTheWay && inTransition_)
+        {
+            inTransition_ = false;
+            onIntDeparture?.Invoke(currentNode);
+        }
 
-        hopInfo_.GetTransform(out Vector3 position, out Vector3 tangent);
+        hopInfo.Update(GetNetSynchronizedTime());
+
+        hopInfo.GetTransform(out Vector3 position, out Vector3 tangent);
 
         transform.position = position;
         transform.forward = tangent;
 
-        if (hopInfo_.stage == HopInfo.HopStage.Completed)
+        if (hopInfo.stage == HopInfo.HopStage.Completed)
         {
-            onIntArrival?.Invoke(currentNode_);
+            onIntArrival?.Invoke(currentNode);
 
             UpdateNextHop();
 
-            if (IsClient())
-            {
+            if (isClient) {
                 //* Play "confused" animation or something while
                 //* the client is waiting for a package from the server.
             }
         }
     }
 
+    private float GetNetSynchronizedTime()
+    {
+        return (float) NetworkTime.time;
+    }
+
     private void UpdateNextHop()
     {
         inTransition_ = true;
 
-        if (!IsServer()) return;
+        if (!isServer) return;
 
-        if (target_ == currentNode_)
+        if (target_ == currentNode)
         {
             enabled = false;
-            hopInfo_.Reset();
+            hopInfo.Reset();
             onArrival?.Invoke(target_);
             return;
         }
 
-        GraphNavigator.RouteEntry entry = currentNode_.GetComponent<GraphNavigator>().NextHopTo(target_);
-        hopInfo_.ScrapFrom(entry);
+        GraphNavigator.RouteEntry entry = currentNode.GetComponent<GraphNavigator>().NextHopTo(target_);
+        hopInfo.ScrapFrom(entry);
 
-        currentNode_ = entry.target;
+        var current_prev = currentNode;
+        currentNode = entry.target;
 
         // Set departure/arrival times
-        hopInfo_.departureTime = GetNetSynchronizedTime();
-        float hopDuration = hopInfo_.spline.GetLength() / speed;
-        hopInfo_.arrivalTime = hopInfo_.departureTime + hopDuration;
+        hopInfo.departureTime = GetNetSynchronizedTime();
+        float hopDuration = hopInfo.spline.GetLength() / speed;
+        hopInfo.arrivalTime = hopInfo.departureTime + hopDuration;
 
-        // TODO: NET: Synchronize hop data with clients
+        // Send nexthop info
+        RpcSetNextHop(current_prev, entry.target, hopInfo.arrivalTime);
     }
 
-    private bool IsServer()
+    [ClientRpc]
+    private void RpcSetNextHop(GameObject current_, GameObject nexthop, float arrivalTime)
     {
-        // TODO: NET: Either implement, or remove.
+        // Because we don't want run this code in host mode
+        if (isServer) {
+            return;
+        }
 
-        return true;
-    }
-    private bool IsClient()
-    {
-        // TODO: NET: Either implement, or remove.
+        initialized_ = true;
 
-        return false;
-    }
+        currentNode = current_;
+        GraphNavigator.RouteEntry entry = currentNode.GetComponent<GraphNavigator>().NextHopTo(nexthop);
+        hopInfo.ScrapFrom(entry);
 
-    // Return a globally synchronized-ish time
-    private float GetNetSynchronizedTime()
-    {
-        // TODO: NET: Implement
-
-        return Time.time;
+        currentNode = entry.target;
+        hopInfo.departureTime = GetNetSynchronizedTime();
+        hopInfo.arrivalTime = arrivalTime;
     }
 
     public void Bind(GameObject node)
     {
-        if (currentNode_ != null)
+        if (currentNode != null)
         {
             Debug.LogWarning("A `Bind` call on a graph walker which was already bound.");
         }
 
-        currentNode_ = node;
-        hopInfo_.Reset();
+        currentNode = node;
+        hopInfo.Reset();
         target_ = null;
     }
 
-    public void BindAndSend(GameObject start, GameObject finish)
-    {
-        Bind(start);
-        GoTo(finish);
-    }
-
+    [Server]
     public void GoTo(GameObject target)
     {
         target_ = target;
@@ -116,11 +110,11 @@ public class GraphWalker : MonoBehaviour
 
         UpdateNextHop();
 
-        enabled = true;
+        initialized_ = true;
     }
 
     [System.Serializable]
-    struct HopInfo
+    public struct HopInfo
     {
         public enum HopStage
         {
@@ -175,7 +169,7 @@ public class GraphWalker : MonoBehaviour
 
         public void Update(float time)
         {
-            progress = (time - departureTime) / arrivalTime;
+            progress = (time - departureTime) / (arrivalTime - departureTime);
 
             if (progress > 1.0f)
             {
@@ -194,9 +188,11 @@ public class GraphWalker : MonoBehaviour
     private GameObject target_;
 
     // The node to which the minion "belongs to" (the node where the current hop leads)
-    private GameObject currentNode_;
-    private HopInfo hopInfo_;
+    public GameObject currentNode;
+    public HopInfo hopInfo;
     private bool inTransition_ = true;
+
+    private bool initialized_ = false;
 
     public delegate void OnArrival(GameObject target);
     public delegate void OnDeparture(GameObject target);
