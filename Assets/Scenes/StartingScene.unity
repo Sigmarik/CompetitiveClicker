@@ -309,7 +309,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 1
   runInBackground: 1
-  headlessStartMode: 1
+  headlessStartMode: 0
   editorAutoStart: 0
   sendRate: 60
   offlineScene: Assets/Scenes/StartingScene.unity
@@ -324,8 +324,7 @@ MonoBehaviour:
   playerPrefab: {fileID: 3304132225417407642, guid: 77ecd6df5e73d24fe8f09d0a9ea53e34, type: 3}
   autoCreatePlayer: 0
   playerSpawnMethod: 0
-  spawnPrefabs:
-  - {fileID: 7308667087325410626, guid: cfe72df0c8f230c019d90ba8d8d604e8, type: 3}
+  spawnPrefabs: []
   exceptionsDisconnect: 1
   snapshotSettings:
     bufferTimeMultiplier: 2
