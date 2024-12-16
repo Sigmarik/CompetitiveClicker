@@ -5,13 +5,29 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public Team team;
-    public MinionSpawner minionSpawner;
 
     private GraphWalker graphWalker_;
 
     //--------------------------------------------------
 
     void Start()
+    {
+        
+    }
+
+    void Update()
+    {
+
+    }
+
+    void Init(GameObject start_node, Team team)
+    {
+        SaveGraphWalker();
+        TeleportTo(start_node);
+        team = team;
+    }
+
+    private void SaveGraphWalker()
     {
         TryGetComponent<GraphWalker>(out GraphWalker walker);
 
@@ -24,11 +40,6 @@ public class Player : MonoBehaviour
         graphWalker_ = walker;
     }
 
-    void Update()
-    {
-
-    }
-
     // checks target node team
     // and goes there
     void TryGoTo(GameObject target)
@@ -39,12 +50,31 @@ public class Player : MonoBehaviour
         graphWalker_.GoTo(target);
     }
 
+    void TeleportTo(GameObject target)
+    {
+        graphWalker_.Bind(place);
+        target_pos = target.GetComponent<Transform>().position;
+        GetComponent<Transform>.SetPosition(target_pos);
+    }
+
     // spawns minion under player
     // works only when player is standing still
     void TrySpawnMinion(GameObject target)
     {
         // TODO: поправить состояния движения
-        if (graphWalker_.IS_WALKING()) return; // can't spawn minion while moving
-        minionSpawner.SpawnMinion(graphWalker_.CURRENT_NODE, target);
+        if (graphWalker_.hopInfo.stage == OnTheWay) return; // can't spawn minion while moving
+        if (!target.GetComponent<SCORE_HOLDER>()) return;             // can only go to enemy node
+        if (team != target.GetComponent<SCORE_HOLDER>().TEAM) return; // can only go to enemy node
+        CmdSpawnMinion(graphWalker_.currentNode_, target);
+    }
+
+    void Escape()
+    {
+
+    }
+
+    void Lose()
+    {
+        
     }
 }

@@ -10,22 +10,22 @@ public class GraphWalker : NetworkBehaviour
             return;
         }
 
-        if (hopInfo_.stage == HopInfo.HopStage.OnTheWay && inTransition_)
+        if (hopInfo.stage == HopInfo.HopStage.OnTheWay && inTransition_)
         {
             inTransition_ = false;
-            onIntDeparture?.Invoke(currentNode_);
+            onIntDeparture?.Invoke(currentNode);
         }
 
-        hopInfo_.Update(GetNetSynchronizedTime());
+        hopInfo.Update(GetNetSynchronizedTime());
 
-        hopInfo_.GetTransform(out Vector3 position, out Vector3 tangent);
+        hopInfo.GetTransform(out Vector3 position, out Vector3 tangent);
 
         transform.position = position;
         transform.forward = tangent;
 
-        if (hopInfo_.stage == HopInfo.HopStage.Completed)
+        if (hopInfo.stage == HopInfo.HopStage.Completed)
         {
-            onIntArrival?.Invoke(currentNode_);
+            onIntArrival?.Invoke(currentNode);
 
             UpdateNextHop();
 
@@ -47,27 +47,27 @@ public class GraphWalker : NetworkBehaviour
 
         if (!isServer) return;
 
-        if (target_ == currentNode_)
+        if (target_ == currentNode)
         {
             enabled = false;
-            hopInfo_.Reset();
+            hopInfo.Reset();
             onArrival?.Invoke(target_);
             return;
         }
 
-        GraphNavigator.RouteEntry entry = currentNode_.GetComponent<GraphNavigator>().NextHopTo(target_);
-        hopInfo_.ScrapFrom(entry);
+        GraphNavigator.RouteEntry entry = currentNode.GetComponent<GraphNavigator>().NextHopTo(target_);
+        hopInfo.ScrapFrom(entry);
 
-        var current_prev = currentNode_;
-        currentNode_ = entry.target;
+        var current_prev = currentNode;
+        currentNode = entry.target;
 
         // Set departure/arrival times
-        hopInfo_.departureTime = GetNetSynchronizedTime();
-        float hopDuration = hopInfo_.spline.GetLength() / speed;
-        hopInfo_.arrivalTime = hopInfo_.departureTime + hopDuration;
+        hopInfo.departureTime = GetNetSynchronizedTime();
+        float hopDuration = hopInfo.spline.GetLength() / speed;
+        hopInfo.arrivalTime = hopInfo.departureTime + hopDuration;
 
         // Send nexthop info
-        RpcSetNextHop(current_prev, entry.target, hopInfo_.arrivalTime);
+        RpcSetNextHop(current_prev, entry.target, hopInfo.arrivalTime);
     }
 
     [ClientRpc]
@@ -80,25 +80,25 @@ public class GraphWalker : NetworkBehaviour
 
         initialized_ = true;
 
-        currentNode_ = current_;
-        GraphNavigator.RouteEntry entry = currentNode_.GetComponent<GraphNavigator>().NextHopTo(nexthop);
-        hopInfo_.ScrapFrom(entry);
+        currentNode = current_;
+        GraphNavigator.RouteEntry entry = currentNode.GetComponent<GraphNavigator>().NextHopTo(nexthop);
+        hopInfo.ScrapFrom(entry);
 
-        currentNode_ = entry.target;
-        hopInfo_.departureTime = GetNetSynchronizedTime();
-        hopInfo_.arrivalTime = arrivalTime;
+        currentNode = entry.target;
+        hopInfo.departureTime = GetNetSynchronizedTime();
+        hopInfo.arrivalTime = arrivalTime;
     }
 
     [Server]
     public void Bind(GameObject node)
     {
-        if (currentNode_ != null)
+        if (currentNode != null)
         {
             Debug.LogWarning("A `Bind` call on a graph walker which was already bound.");
         }
 
-        currentNode_ = node;
-        hopInfo_.Reset();
+        currentNode = node;
+        hopInfo.Reset();
         target_ = null;
     }
 
@@ -115,7 +115,7 @@ public class GraphWalker : NetworkBehaviour
     }
 
     [System.Serializable]
-    struct HopInfo
+    public struct HopInfo
     {
         public enum HopStage
         {
@@ -189,8 +189,8 @@ public class GraphWalker : NetworkBehaviour
     private GameObject target_;
 
     // The node to which the minion "belongs to" (the node where the current hop leads)
-    private GameObject currentNode_;
-    private HopInfo hopInfo_;
+    public GameObject currentNode;
+    public HopInfo hopInfo;
     private bool inTransition_ = true;
 
     private bool initialized_ = false;
