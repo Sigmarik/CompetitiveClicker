@@ -11,11 +11,9 @@ public class DBG_CharacterPresentation : MonoBehaviour
 
         if (!cloned_)
         {
-            secondInstance = Instantiate(gameObject, transform);
+            secondInstance = Instantiate(gameObject, null);
             DBG_CharacterPresentation presentation = secondInstance.GetComponent<DBG_CharacterPresentation>();
             presentation.cloned_ = true;
-            secondInstance.transform.localPosition = Vector3.zero;
-            secondInstance.transform.localScale = Vector3.one;
             enabled = false;
         }
     }
