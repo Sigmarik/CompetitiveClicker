@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
     void TryGoTo(GameObject target)
     {
         // TODO: uncomment
-        // if (team != target.GetComponent<SCORE_HOLDER>().TEAM) return;
+        // if (team != target.GetComponent<NodeMechanics>().team) return;
         graphWalker_.GoTo(target);
     }
 
@@ -58,14 +58,20 @@ public class Player : MonoBehaviour
     // works only when player is standing still
     void TrySpawnMinion(GameObject target)
     {
-        if (graphWalker_.hopInfo.stage == GraphWalker.HopInfo.HopStage.OnTheWay) return;
+        if (IsMoving()) return;
+        if (GetCurrentNodeTeam() == team) return;
         // TODO: uncomment
-        // if (team != target.GetComponent<SCORE_HOLDER>().TEAM) return;
-        //  CmdSpawnMinion(graphWalker_.currentNode_, target);
+        // CmdSpawnMinion(graphWalker_.currentNode_, target);
     }
 
-    void Escape()
+    // escapes from node, if needed
+    void TryEscape()
     {
+        if (IsMoving())                   return;
+        if (GetCurrentNodeTeam() == team) return;
+
+        //--------------------------------------------------
+
         GraphNavigator navigator = graphWalker_.currentNode.GetComponent<GraphNavigator>();
         GameObject    escapeTile = navigator.FindTeamNode(team);
 
@@ -76,5 +82,19 @@ public class Player : MonoBehaviour
     void Die()
     {
         Destroy(gameObject);
+    }
+
+    //--------------------------------------------------
+
+    private bool IsMoving()
+    {
+        return graphWalker_.hopInfo.stage == GraphWalker.HopInfo.HopStage.OnTheWay;
+    }
+
+    private Team GetCurrentNodeTeam()
+    {
+        // TODO: uncomment
+        // return graphWalker_.currentNode.GetComponent<NodeMechanics>().team;
+        return Team.Spiders;
     }
 }
