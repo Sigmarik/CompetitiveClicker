@@ -4,10 +4,11 @@ using UnityEngine;
 // TODO: Rename teams
 public enum Team
 {
-    Spiders,
+    Default,
     Skeletons,
     Wizards,
-    Goblins
+    Bandits,
+    Knights
 }
 
 public class Score
