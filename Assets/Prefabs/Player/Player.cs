@@ -21,6 +21,10 @@ public class Player : NetworkBehaviour
         {
             var runnerEnd = GameObject.Find("Sphere");
         
+            if (runnerEnd == graphWalker_.currentNode) {
+                runnerEnd = GameObject.Find("Cube");
+            }
+
             TrySpawnMinion(runnerEnd);
         }
 

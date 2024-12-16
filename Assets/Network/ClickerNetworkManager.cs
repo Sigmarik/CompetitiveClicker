@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 
-public struct CreateCharacterMessage : NetworkMessage
-{
-    public Team team;
-}
+public struct CreateCharacterMessage : NetworkMessage {}
 
 public class ClickerNetworkManager : NetworkManager
 {
+    private int playerCount = 0;
+
     public override void OnStartServer()
     {
         base.OnStartServer();
@@ -21,11 +20,7 @@ public class ClickerNetworkManager : NetworkManager
     {
         base.OnClientConnect();
 
-        CreateCharacterMessage characterMessage = new CreateCharacterMessage
-        {
-            team = Team.Default
-        };
-
+        CreateCharacterMessage characterMessage = new();
         NetworkClient.Send(characterMessage);
     }
 
@@ -40,11 +35,12 @@ public class ClickerNetworkManager : NetworkManager
         Player player = gameobject.GetComponent<Player>();
 
         // Currently anyone starts at cude
-        var playerPos = GameObject.Find("Cube");
+        var playerPos = GameObject.FindGameObjectsWithTag("PlayerSpawn")[playerCount];
 
         // call this to use this gameobject as the primary controller
         NetworkServer.AddPlayerForConnection(conn, gameobject);
+        player.Init(playerPos, (Team) (playerCount + 1));
 
-        player.Init(playerPos, message.team);
+        playerCount += 1;
     }
 }
