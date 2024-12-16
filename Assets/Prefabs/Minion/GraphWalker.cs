@@ -15,22 +15,22 @@ public class GraphWalker : MonoBehaviour
 
     void Update()
     {
-        if (hopInfo_.stage == HopInfo.HopStage.OnTheWay && inTransition_)
+        if (hopInfo.stage == HopInfo.HopStage.OnTheWay && inTransition_)
         {
             inTransition_ = false;
-            onIntDeparture?.Invoke(currentNode_);
+            onIntDeparture?.Invoke(currentNode);
         }
 
-        hopInfo_.Update(GetNetSynchronizedTime());
+        hopInfo.Update(GetNetSynchronizedTime());
 
-        hopInfo_.GetTransform(out Vector3 position, out Vector3 tangent);
+        hopInfo.GetTransform(out Vector3 position, out Vector3 tangent);
 
         transform.position = position;
         transform.forward = tangent;
 
-        if (hopInfo_.stage == HopInfo.HopStage.Completed)
+        if (hopInfo.stage == HopInfo.HopStage.Completed)
         {
-            onIntArrival?.Invoke(currentNode_);
+            onIntArrival?.Invoke(currentNode);
 
             UpdateNextHop();
 
@@ -48,23 +48,23 @@ public class GraphWalker : MonoBehaviour
 
         if (!IsServer()) return;
 
-        if (target_ == currentNode_)
+        if (target_ == currentNode)
         {
             enabled = false;
-            hopInfo_.Reset();
+            hopInfo.Reset();
             onArrival?.Invoke(target_);
             return;
         }
 
-        GraphNavigator.RouteEntry entry = currentNode_.GetComponent<GraphNavigator>().NextHopTo(target_);
-        hopInfo_.ScrapFrom(entry);
+        GraphNavigator.RouteEntry entry = currentNode.GetComponent<GraphNavigator>().NextHopTo(target_);
+        hopInfo.ScrapFrom(entry);
 
-        currentNode_ = entry.target;
+        currentNode = entry.target;
 
         // Set departure/arrival times
-        hopInfo_.departureTime = GetNetSynchronizedTime();
-        float hopDuration = hopInfo_.spline.GetLength() / speed;
-        hopInfo_.arrivalTime = hopInfo_.departureTime + hopDuration;
+        hopInfo.departureTime = GetNetSynchronizedTime();
+        float hopDuration = hopInfo.spline.GetLength() / speed;
+        hopInfo.arrivalTime = hopInfo.departureTime + hopDuration;
 
         // TODO: NET: Synchronize hop data with clients
     }
@@ -92,13 +92,13 @@ public class GraphWalker : MonoBehaviour
 
     public void Bind(GameObject node)
     {
-        if (currentNode_ != null)
+        if (currentNode != null)
         {
             Debug.LogWarning("A `Bind` call on a graph walker which was already bound.");
         }
 
-        currentNode_ = node;
-        hopInfo_.Reset();
+        currentNode = node;
+        hopInfo.Reset();
         target_ = null;
     }
 
@@ -194,8 +194,8 @@ public class GraphWalker : MonoBehaviour
     private GameObject target_;
 
     // The node to which the minion "belongs to" (the node where the current hop leads)
-    private GameObject currentNode_;
-    private HopInfo hopInfo_;
+    public GameObject currentNode;
+    public HopInfo hopInfo;
     private bool inTransition_ = true;
 
     public delegate void OnArrival(GameObject target);
