@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class RoomChangeAnimator : ScoreAnimator
@@ -19,6 +21,9 @@ public class RoomChangeAnimator : ScoreAnimator
         }
 
         selector_ = GetComponent<RoomSelectionLogics>();
+
+        text_ = textDisplay.GetComponent<TextMeshPro>();
+        text_.text = "0";
     }
 
     void RegisterInfo(RoomInfo info, Team team, int level)
@@ -61,6 +66,7 @@ public class RoomChangeAnimator : ScoreAnimator
         RoomInfo newInfo;
 
         selector_.SetTeamColor(newScore.GetColor());
+        text_.text = newScore.score.ToString();
 
         if (!bakedRooms_.ContainsKey(newScore.team))
         {
@@ -194,4 +200,7 @@ public class RoomChangeAnimator : ScoreAnimator
     private float animTimeStart_ = -9999.0f;
 
     private RoomSelectionLogics selector_;
+
+    public GameObject textDisplay;
+    private TextMeshPro text_;
 }
