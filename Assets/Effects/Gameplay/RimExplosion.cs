@@ -54,6 +54,7 @@ public class RimExplosion : MonoBehaviour
                 return;
             }
             selfCopy_.SetActive(true);
+            selfCopy_.transform.position = transform.position;
             selfCopy_.GetComponent<RimExplosion>().Explode();
         }
 

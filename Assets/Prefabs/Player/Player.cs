@@ -48,7 +48,7 @@ public class Player : NetworkBehaviour
     void CmdSpawnMinion(GameObject runnerStart, GameObject runnerEnd)
     {
         // Setup runner
-        var runner_obj = Instantiate(runnerPrefab);
+        var runner_obj = Instantiate(runnerPrefab, runnerStart.transform);
         var runner = runner_obj.GetComponent<Runner>();
         runner.Init(runnerStart, team);
         // Spawn on all nodes
