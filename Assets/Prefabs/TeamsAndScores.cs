@@ -11,12 +11,16 @@ public enum Team
     Knights
 }
 
+
 public class Score
 {
     public static readonly Team[] overallTeams = {Team.Skeletons, Team.Wizards, Team.Bandits, Team.Knights}; 
 
     public Team team = Team.Default;
     public uint score = 0;
+
+    public delegate void changingAction ();
+    public changingAction onOwnershipChange;
 
     public bool Teamed()
     {
@@ -83,6 +87,8 @@ public class Score
             {
                 team = effector;
                 score = (uint)(change - score);
+
+                onOwnershipChange?.Invoke();
             }
             else
             {
