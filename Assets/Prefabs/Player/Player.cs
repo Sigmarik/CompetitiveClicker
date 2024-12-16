@@ -48,7 +48,7 @@ public class Player : NetworkBehaviour
         // Setup runner
         var runner_obj = Instantiate(runnerPrefab);
         var runner = runner_obj.GetComponent<Runner>();
-        runner.Init(runnerStart);
+        runner.Init(runnerStart, team_);
         // Spawn on all nodes
         NetworkServer.Spawn(runner_obj);
 
