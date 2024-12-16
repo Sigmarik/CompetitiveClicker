@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Mirror;
 
-public class ScoreHolder : MonoBehaviour {
+public class ScoreHolder : NetworkBehaviour {
 
     void Start() {
-        
+    
         var bank = NetworkClient.localPlayer.gameObject.GetComponent<ResourceBank>();
 
         logic = new NodeLogic(bank);

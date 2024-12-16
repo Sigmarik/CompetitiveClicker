@@ -23,7 +23,7 @@ public class ClickerNetworkManager : NetworkManager
 
         CreateCharacterMessage characterMessage = new CreateCharacterMessage
         {
-            team = Team.Spiders
+            team = Team.Default
         };
 
         NetworkClient.Send(characterMessage);

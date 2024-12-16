@@ -128,6 +128,6 @@ public class Player : NetworkBehaviour
     {
         // TODO: uncomment
         // return graphWalker_.currentNode.GetComponent<NodeMechanics>().team;
-        return Team.Spiders;
+        return Team.Default;
     }
 }
