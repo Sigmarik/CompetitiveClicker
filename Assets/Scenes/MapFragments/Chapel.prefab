@@ -225,9 +225,9 @@ MonoBehaviour:
         z: 0.5
       Rotation:
         value:
-          x: -0.0000001447261
+          x: -0.00000014500353
           y: 0.3162278
-          z: -0.00000043417828
+          z: -0.00000043501058
           w: 0.9486834
     - Position:
         x: 3
@@ -5656,15 +5656,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1964760659030137260, guid: 22a6dc2d0b5145c44869036016497039, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -66.24971
+      value: -66.54
       objectReference: {fileID: 0}
     - target: {fileID: 1964760659030137260, guid: 22a6dc2d0b5145c44869036016497039, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 65.774025
+      value: 66.93
       objectReference: {fileID: 0}
     - target: {fileID: 1964760659030137260, guid: 22a6dc2d0b5145c44869036016497039, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.4966564
+      value: -7.685
       objectReference: {fileID: 0}
     - target: {fileID: 1964760659030137260, guid: 22a6dc2d0b5145c44869036016497039, type: 3}
       propertyPath: m_LocalRotation.w
