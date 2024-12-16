@@ -1,12 +1,12 @@
-using Mirror;
 using UnityEngine;
+using Mirror;
 
 // КАПСОМ выделены методы, которых не существует,
 // но которые нужно бы добавить
 public class Player : NetworkBehaviour
 {
     [SyncVar]
-    private Team team_;
+    public Team team_;
     public GameObject runnerPrefab;
 
     private GraphWalker graphWalker_;
@@ -46,42 +46,24 @@ public class Player : NetworkBehaviour
         TeleportTo(start_node);
     }
 
-    [Command]
-    void CmdSpawnMinion(GameObject runnerStart, GameObject runnerEnd)
-    {
-        // Setup runner
-        var runner_obj = Instantiate(runnerPrefab);
-        var runner = runner_obj.GetComponent<Runner>();
-        runner.Init(runnerStart, team_);
-        // Spawn on all nodes
-        NetworkServer.Spawn(runner_obj);
-
-        // Begin walking
-        runner.SendTo(runnerEnd);
-    }
-
-    private void SaveGraphWalker()
-    {
-        TryGetComponent<GraphWalker>(out GraphWalker walker);
-
-        if (walker == null)
-        {
-            Debug.LogError("Missing `GraphWalker` component.");
-            return;
-        }
-
-        graphWalker_ = walker;
-    }
-
     // checks target node team
     // and goes there
-    void TryGoTo(GameObject target)
+    public void TryGoTo(GameObject target)
     {
-        // TODO: поправить получение команды цели
-        // if (!target.GetComponent<SCORE_HOLDER>()) return;
-        // if (team != target.GetComponent<SCORE_HOLDER>().TEAM) return; // can only go to my node
+        if (!IsSameTeamAs(target)) return;
         graphWalker_.GoTo(target);
     }
+
+    // spawns minion under player
+    // works only when player is standing still
+    public void TrySpawnMinion(GameObject target)
+    {
+        if (IsMoving())           return;
+        if (IsSameTeamAs(target)) return;
+        CmdSpawnMinion(graphWalker_.currentNode, target);
+    }
+
+    //--------------------------------------------------
 
     void TeleportTo(GameObject target)
     {
@@ -90,22 +72,11 @@ public class Player : NetworkBehaviour
         GetComponent<Transform>().position = target_pos;
     }
 
-    // spawns minion under player
-    // works only when player is standing still
-    void TrySpawnMinion(GameObject target)
-    {
-        // TODO: поправить состояния движения
-        if (graphWalker_.hopInfo.stage == GraphWalker.HopInfo.HopStage.OnTheWay) return; // can't spawn minion while moving
-        // if (!target.GetComponent<SCORE_HOLDER>()) return;             // can only go to enemy node
-        // if (team != target.GetComponent<SCORE_HOLDER>().TEAM) return; // can only go to enemy node
-        CmdSpawnMinion(graphWalker_.currentNode, target);
-    }
-
     [Server]
     void TryEscape()
     {
-        if (IsMoving())                   return;
-        if (GetCurrentNodeTeam() == team_) return;
+        if (IsMoving())                             return;
+        if (IsSameTeamAs(graphWalker_.currentNode)) return;
 
         //--------------------------------------------------
 
@@ -123,15 +94,43 @@ public class Player : NetworkBehaviour
 
     //--------------------------------------------------
 
-    private bool IsMoving()
+    bool IsMoving()
     {
         return graphWalker_.hopInfo.stage == GraphWalker.HopInfo.HopStage.OnTheWay;
     }
 
-    private Team GetCurrentNodeTeam()
+    bool IsSameTeamAs(GameObject obj)
     {
-        // TODO: uncomment
-        // return graphWalker_.currentNode.GetComponent<NodeMechanics>().team;
-        return Team.Default;
+        return team_ == obj.GetComponent<ScoreHolder>().logic.scoreData.team;
     }
+
+    //--------------------------------------------------
+
+    [Command]
+    void CmdSpawnMinion(GameObject runnerStart, GameObject runnerEnd)
+    {
+        // Setup runner
+        var runner_obj = Instantiate(runnerPrefab);
+        var runner = runner_obj.GetComponent<Runner>();
+        runner.Init(runnerStart, team_);
+        // Spawn on all nodes
+        NetworkServer.Spawn(runner_obj);
+
+        // Begin walking
+        runner.SendTo(runnerEnd);
+    }
+
+    void SaveGraphWalker()
+    {
+        TryGetComponent<GraphWalker>(out GraphWalker walker);
+
+        if (walker == null)
+        {
+            Debug.LogError("Missing `GraphWalker` component.");
+            return;
+        }
+
+        graphWalker_ = walker;
+    }
+
 }
