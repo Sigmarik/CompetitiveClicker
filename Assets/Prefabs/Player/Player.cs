@@ -5,8 +5,7 @@ using UnityEngine;
 // но которые нужно бы добавить
 public class Player : NetworkBehaviour
 {
-    [SyncVar]
-    private Team team_;
+    public Team team;
     public GameObject runnerPrefab;
 
     private GraphWalker graphWalker_;
@@ -28,15 +27,14 @@ public class Player : NetworkBehaviour
             TrySpawnMinion(runnerEnd);
         }
 
-        TryEscape();
+        // TryEscape();
     }
 
     [Server]
-    public void Init(GameObject start_node, Team team)
+    public void Init(GameObject start_node)
     {
         SaveGraphWalker();
         TeleportTo(start_node);
-        team_ = team;
         RpcInit(start_node);
     }
 
@@ -52,7 +50,7 @@ public class Player : NetworkBehaviour
         // Setup runner
         var runner_obj = Instantiate(runnerPrefab);
         var runner = runner_obj.GetComponent<Runner>();
-        runner.Init(runnerStart, team_);
+        runner.Init(runnerStart, team);
         // Spawn on all nodes
         NetworkServer.Spawn(runner_obj);
 
@@ -105,12 +103,12 @@ public class Player : NetworkBehaviour
     void TryEscape()
     {
         if (IsMoving())                   return;
-        if (GetCurrentNodeTeam() == team_) return;
+        if (GetCurrentNodeTeam() == team) return;
 
         //--------------------------------------------------
 
         GraphNavigator navigator = graphWalker_.currentNode.GetComponent<GraphNavigator>();
-        GameObject    escapeTile = navigator.FindTeamNode(team_);
+        GameObject    escapeTile = navigator.FindTeamNode(team);
 
         if (escapeTile == null) { Die(); return; }
         graphWalker_.GoTo(escapeTile);

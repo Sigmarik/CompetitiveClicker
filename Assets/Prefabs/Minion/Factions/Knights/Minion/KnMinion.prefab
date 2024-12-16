@@ -9,6 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2411732225468529075}
+  - component: {fileID: 7286032503832890905}
+  - component: {fileID: 2963474616845405894}
+  - component: {fileID: -1874514204286230394}
   m_Layer: 0
   m_Name: KnMinion
   m_TagString: Untagged
@@ -32,6 +35,74 @@ Transform:
   - {fileID: 3104962492391533716}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7286032503832890905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 751738596698742768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 3213598108
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
+--- !u!114 &2963474616845405894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 751738596698742768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 150e6c905d6be5446b907b0087a9e2ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+--- !u!114 &-1874514204286230394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 751738596698742768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11ca5b009940fc246ab60c33bcc9c315, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  currentNode: {fileID: 0}
+  hopInfo:
+    splineObject: {fileID: 0}
+    spline:
+      m_EditModeType: 1
+      m_Knots: []
+      m_MetaData: []
+      m_Closed: 0
+      m_IntData:
+        m_Data: []
+      m_FloatData:
+        m_Data: []
+      m_Float4Data:
+        m_Data: []
+      m_ObjectData:
+        m_Data: []
+    arrivalTime: 0
+    departureTime: 0
+    progress: 0
+    splineInverted: 0
+  speed: 4
 --- !u!1001 &2290845005513898291
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -26,21 +26,40 @@ public class ClickerNetworkManager : NetworkManager
 
     void OnCreateCharacter(NetworkConnectionToClient conn, CreateCharacterMessage message)
     {
+        if (playerCount >= Score.overallTeams.Length)
+            return;
+        Team current_team = Score.overallTeams[playerCount];
+
+
         // playerPrefab is the one assigned in the inspector in Network
         // Manager but you can use different prefabs per race for example
-        GameObject gameobject = Instantiate(playerPrefab);
+        GameObject player_object = null;
+        switch (current_team)
+        {
+            case Team.Bandits:   player_object = Instantiate(BanditPlayerPrefab);   break;
+            case Team.Knights:   player_object = Instantiate(KnightPlayerPrefab);   break;
+            case Team.Skeletons: player_object = Instantiate(SkeletonPlayerPrefab); break;
+            case Team.Wizards:   player_object = Instantiate(WizardPlayerPrefab);   break;
+        }
 
         // Apply data from the message however appropriate for your game
         // Typically Player would be a component you write with syncvars or properties
-        Player player = gameobject.GetComponent<Player>();
+        Player player = player_object.GetComponent<Player>();
 
         // Currently anyone starts at cude
         var playerPos = GameObject.FindGameObjectsWithTag("PlayerSpawn")[playerCount];
+        if (playerPos.TryGetComponent<ScoreHolder>(out ScoreHolder score))
+            score.logic.scoreData.team = current_team;
 
         // call this to use this gameobject as the primary controller
-        NetworkServer.AddPlayerForConnection(conn, gameobject);
-        player.Init(playerPos, (Team) (playerCount + 1));
+        NetworkServer.AddPlayerForConnection(conn, player_object);
+        player.Init(playerPos);
 
         playerCount += 1;
     }
+
+    public GameObject BanditPlayerPrefab;
+    public GameObject KnightPlayerPrefab;
+    public GameObject SkeletonPlayerPrefab;
+    public GameObject WizardPlayerPrefab;
 }

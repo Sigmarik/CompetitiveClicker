@@ -341,6 +341,10 @@ MonoBehaviour:
   evaluationMethod: 0
   evaluationInterval: 3
   timeInterpolationGui: 0
+  BanditPlayerPrefab: {fileID: 9207318241883516989, guid: 1fdffc77b974aca40b490b46479df0ab, type: 3}
+  KnightPlayerPrefab: {fileID: 5023635059626492956, guid: f5fe6af71fe98844d9f6384463fb6070, type: 3}
+  SkeletonPlayerPrefab: {fileID: 3455713113593311512, guid: 7cdc5c737595b9349af6eb25c31f119d, type: 3}
+  WizardPlayerPrefab: {fileID: 6369517939746726251, guid: 70ef9579124a2ab4293866eddd58bd99, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
