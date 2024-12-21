@@ -4,37 +4,63 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Mirror;
 
-public class ScoreHolder : NetworkBehaviour {
+public class ScoreHolder: NetworkBehaviour {
 
     void Start() {
-    
-        var bank = NetworkClient.localPlayer.gameObject.GetComponent<ResourceBank>();
-
-        logic = new NodeLogic(bank);
+        scoreData = new()
+        {
+            onOwnershipChange = onOwnershipChange
+        };
     }
 
     void Update() {
-        
-        accrueGoldIfNeed(Time.deltaTime);
-    }
+        // Cursed, but design of scores are awfull and unmanagable from network standpoint
 
-    private void accrueGoldIfNeed (float dt) {
+        if (isServer) {
+            accrueGoldIfNeed(Time.deltaTime);
+            team  = scoreData.team;
+            score = scoreData.score;
+        }
 
-        passedTime_ += dt;
-
-        if (passedTime_ >= tickLenth) {
-
-            passedTime_ = 0;
-
-            logic.accrueGold(type, oneTickAmount);
+        if (isClient) {
+            scoreData.team = team;
+            scoreData.score = score;
         }
     }
 
+    [Server]
+    private void accrueGoldIfNeed (float dt) {
+        passedTime_ += dt;
+
+        if (passedTime_ >= tickLenth) {
+            passedTime_ = 0;
+            accrueGold(oneTickAmount);
+        }
+    }
+
+    [Server]
+    public void accrueGold ( uint amount) {
+        if (scoreData.Teamed()) {
+            bank.AddIncome(scoreData.team, amount);
+        }
+    }
+
+    [Server]
+    public void onOwnershipChange() {
+        // TODO
+    }
+
+    [SyncVar]
+    public Team team = Team.Default;
+    
+    [SyncVar]
+    public uint score = 0;
+
+
     //---Data---
+    public Score scoreData;
+    public ResourceBank bank;
 
-    public NodeLogic logic;
-
-    public ResourceType type = ResourceType.Copper;
     public uint oneTickAmount = 1;
 
     public uint tickLenth = 1;          //time to accrue gold to player
