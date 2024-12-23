@@ -313,7 +313,7 @@ MonoBehaviour:
   editorAutoStart: 0
   sendRate: 60
   offlineScene: Assets/Scenes/StartingScene.unity
-  onlineScene: Assets/Scenes/SampleScene.unity
+  onlineScene: Assets/Scenes/SimpleDungeon.unity
   offlineSceneLoadDelay: 0
   transport: {fileID: 1607097525}
   networkAddress: localhost

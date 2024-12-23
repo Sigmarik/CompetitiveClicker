@@ -1,27 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using TMPro;
 using UnityEngine;
 
-public class GoldCountRequester : MonoBehaviour
+public class GoldCountRequester : NetworkBehaviour
 {
     // Start is called before the first frame update
-    void Start()
+    public override void OnStartClient()
     {
         text_ = GetComponent<TextMeshProUGUI>();
+        bank_ = FindObjectOfType<ResourceBank>();
     }
 
-    int FindGoldCount()
+    uint FindGoldCount()
     {
-        // TODO: Request the amount of gold of the player.
+        // Ugly fix
+        // Probably because player is spawned before initialization
+        // WHICH WE CAN'T REMOVE BECAUSE OF movement sync
+        // . . .
+        // Suffer
+        if (team_ == Team.Default) {
+            team_ = NetworkClient.localPlayer.gameObject.GetComponent<Player>().team;
+        }
 
-        return Random.Range(0, 999);
+        return bank_.GetMoney(team_);
     }
 
+    [Client]
     void Update()
     {
         text_.text = FindGoldCount().ToString();
     }
 
+    private ResourceBank bank_;
+    [SerializeField] private Team team_ = Team.Default;
     private TextMeshProUGUI text_;
 }
