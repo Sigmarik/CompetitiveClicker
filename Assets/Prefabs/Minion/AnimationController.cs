@@ -15,6 +15,7 @@ public class AnimationController : MonoBehaviour
         bool isMoving = velocity.magnitude > speedThreshold;
         UpdateAnimationState(isMoving);
         animator_.Update(Time.deltaTime);
+        position_ = newPos;
     }
 
     private void UpdateAnimationState(bool isMoving)
