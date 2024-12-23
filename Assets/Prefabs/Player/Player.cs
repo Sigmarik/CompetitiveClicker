@@ -1,6 +1,8 @@
 using System;
 using Mirror;
 using UnityEngine;
+using System.Collections;
+
 
 public class Player : NetworkBehaviour
 {
@@ -10,8 +12,14 @@ public class Player : NetworkBehaviour
     public GraphWalker graphWalker_;
 
     private ResourceBank bank_;
+    private PlayerPerksShop perks_;
 
     //--------------------------------------------------
+
+    void Awake()
+    {
+        perks_= new PlayerPerksShop(team);
+    }
 
     public override void OnStartServer() {
         bank_ = FindObjectOfType<ResourceBank>();
@@ -25,17 +33,60 @@ public class Player : NetworkBehaviour
 
         if (!isLocalPlayer) return;
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            var runnerEnd = GameObject.Find("Sphere");
-        
-            if (runnerEnd == graphWalker_.currentNode) {
-                runnerEnd = GameObject.Find("Cube");
-            }
 
-            TrySpawnMinion(runnerEnd);
+        if (Input.GetKeyDown(KeyCode.Alpha1)) {
+            
+            if(perks_.buyPerk(Perks.Speed)) {
+
+                StartCoroutine(speedRemover());
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2)) {
+            
+            if(perks_.buyPerk(Perks.Size)) {
+
+                StartCoroutine(sizeRemover());
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3)) {
+            
+            if(perks_.buyPerk(Perks.MashroomSpeed)) {
+                
+                CmdChangeSpeed(10);
+                StartCoroutine(mashroomSpeedRemover());
+            }
         }
     }
+
+    [Command]
+    private void CmdChangeSpeed (float factor) {
+
+        graphWalker_.speed *= factor;
+    }
+
+     //Kalische
+    private IEnumerator speedRemover () {
+
+        yield return new WaitForSeconds(5);
+        perks_.removePerk(Perks.Speed);
+    }
+
+    private IEnumerator sizeRemover () {
+
+        yield return new WaitForSeconds(5);
+        perks_.removePerk(Perks.Size);
+    }
+
+    private IEnumerator mashroomSpeedRemover () {
+
+        yield return new WaitForSeconds(5);
+        perks_.removePerk(Perks.MashroomSpeed);
+
+        CmdChangeSpeed(0.1f);
+    }
+    //End of Kalische (jokes on you it will never ever ends)
 
     [Server]
     public void Init(GameObject startNode)
@@ -62,12 +113,12 @@ public class Player : NetworkBehaviour
     }
 
     [Command(requiresAuthority = false)]
-    void CmdSpawnMinion(GameObject runnerStart, GameObject runnerEnd)
+    void CmdSpawnMinion(GameObject runnerStart, GameObject runnerEnd, float speedFactor, float sizeFuck)
     {
-        SpawnMinion(runnerStart, runnerEnd);
+        SpawnMinion(runnerStart, runnerEnd, speedFactor, sizeFuck);
     }
 
-    void SpawnMinion(GameObject runnerStart, GameObject runnerEnd)
+    void SpawnMinion(GameObject runnerStart, GameObject runnerEnd, float speedFactor, float sizeFuck)
     {
         if (bank_.GetMoney(team) < 1) {
             return;
@@ -78,6 +129,10 @@ public class Player : NetworkBehaviour
         // Setup runner
         var runner_obj = Instantiate(runnerPrefab, runnerStart.transform);
         var runner = runner_obj.GetComponent<Runner>();
+
+        runner_obj.GetComponent<GraphWalker>().speed *= speedFactor;
+        runner.transform.localScale = new Vector3(sizeFuck, sizeFuck, sizeFuck);
+
         runner.Init(runnerStart, team);
         // Spawn on all nodes
         NetworkServer.Spawn(runner_obj);
@@ -130,10 +185,24 @@ public class Player : NetworkBehaviour
     // works only when player is standing still
     public void TrySpawnMinion(GameObject target)
     {
+        float speedFactor = 1f, sizeFuck = 1f;
+
+        if (perks_.isHasPerk(Perks.Speed)) {
+
+            speedFactor *= 5f;
+            sizeFuck /= 2f;
+        }
+
+        if (perks_.isHasPerk(Perks.Size)) {
+
+            speedFactor /= 5f;
+            sizeFuck *= 2f;
+        }
+
         if (IsMoving()) return; // can't spawn minion while moving
 
-        if (isServer) SpawnMinion(graphWalker_.currentNode, target);
-        else       CmdSpawnMinion(graphWalker_.currentNode, target);
+        if (isServer) SpawnMinion(graphWalker_.currentNode, target, 1.0f, 1.0f);
+        else       CmdSpawnMinion(graphWalker_.currentNode, target, speedFactor, sizeFuck);
     }
 
     [Server]
