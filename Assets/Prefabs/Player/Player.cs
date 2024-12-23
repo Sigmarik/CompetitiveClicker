@@ -47,6 +47,11 @@ public class Player : NetworkBehaviour
     [Command(requiresAuthority = false)]
     void CmdSpawnMinion(GameObject runnerStart, GameObject runnerEnd)
     {
+        SpawnMinion(runnerStart, runnerEnd);
+    }
+
+    void SpawnMinion(GameObject runnerStart, GameObject runnerEnd)
+    {
         // Setup runner
         var runner_obj = Instantiate(runnerPrefab, runnerStart.transform);
         var runner = runner_obj.GetComponent<Runner>();
@@ -71,14 +76,24 @@ public class Player : NetworkBehaviour
         graphWalker_ = walker;
     }
 
-    // checks target node team
-    // and goes there
     [Command(requiresAuthority = false)]
-    public void CmdTryGoTo(GameObject target)
+    public void CmdGoTo(GameObject target)
+    {
+        GoTo(target);
+    }
+
+    public void GoTo(GameObject target)
+    {
+        graphWalker_.GoTo(target);
+    }
+
+    public void TryGoTo(GameObject target)
     {
         if (IsMoving()) return; // can't spawn minion while moving
         if (target == graphWalker_.currentNode) return;
-        graphWalker_.GoTo(target);
+
+        if (isServer) GoTo(target);
+        else       CmdGoTo(target);
     }
 
     void TeleportTo(GameObject target)
@@ -93,7 +108,9 @@ public class Player : NetworkBehaviour
     public void TrySpawnMinion(GameObject target)
     {
         if (IsMoving()) return; // can't spawn minion while moving
-        CmdSpawnMinion(graphWalker_.currentNode, target);
+
+        if (isServer) SpawnMinion(graphWalker_.currentNode, target);
+        else       CmdSpawnMinion(graphWalker_.currentNode, target);
     }
 
     [Server]

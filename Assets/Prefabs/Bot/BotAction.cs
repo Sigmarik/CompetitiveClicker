@@ -68,6 +68,6 @@ public class BotActionMove: BotAction {
     {
         GraphNavigator navigator = bot.graphWalker_.currentNode.GetComponent<GraphNavigator>();
         GameObject target = navigator.FindRandomTeamNode(bot.team);
-        bot.CmdTryGoTo(target);
+        bot.TryGoTo(target);
     }
 }
