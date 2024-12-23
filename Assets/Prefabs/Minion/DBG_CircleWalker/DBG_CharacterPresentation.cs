@@ -25,12 +25,14 @@ public class DBG_CharacterPresentation : MonoBehaviour
             return;
         }
 
+        float portion = Mathf.Sin(Time.time / 5.0f) * 5.0f;
+
         transform.position = center_ +
-            Vector3.forward * Mathf.Sin(Time.time) * radius +
-            Vector3.right * Mathf.Cos(Time.time) * radius;
+            Vector3.forward * Mathf.Sin(portion) * radius +
+            Vector3.right * Mathf.Cos(portion) * radius;
         transform.rotation = Quaternion.LookRotation(
-            -Vector3.right * Mathf.Sin(Time.time) * radius +
-            Vector3.forward * Mathf.Cos(Time.time) * radius, Vector3.up);
+            -Vector3.right * Mathf.Sin(portion) * radius +
+            Vector3.forward * Mathf.Cos(portion) * radius, Vector3.up);
     }
 
     private GameObject secondInstance;
