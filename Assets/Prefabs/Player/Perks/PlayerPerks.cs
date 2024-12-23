@@ -28,18 +28,26 @@ public class PlayerPerks {
 
         bool added = perks_.Add(perk.name);
 
-        Debug.Log("Perk " + isHasPerk(perk));
-        Debug.Log("Speed " + isHasPerk(Perks.Speed));
-
         if (!added) {
 
             Debug.Log("Player already have perk you are trying to add: " + perk);
         }
         else {
 
-            Invoke(removePerk(perk), 5);
+            if (isHasPerk(Perks.Speed)) {
+
+                StartCoroutine(speedRemover());
+            }
         }
     }
+
+    //Kalische
+    private IEnumerator speedRemover () {
+
+        yield return new WaitForSeconds(5);
+        removePerk(Perks.Speed);
+    }
+    //End of Kalische (jokes on you it will never ever ends)
 
     public void removePerk (Perk perk) {
 
