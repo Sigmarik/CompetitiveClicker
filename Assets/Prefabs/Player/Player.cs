@@ -13,8 +13,6 @@ public class Player : NetworkBehaviour
     private GraphWalker graphWalker_;
     private PlayerPerksShop perks_;
 
-    private float speed_ = 1f;
-
     //--------------------------------------------------
 
     void Awake()
@@ -63,14 +61,14 @@ public class Player : NetworkBehaviour
     }
 
     [Command]
-    void CmdSpawnMinion(GameObject runnerStart, GameObject runnerEnd, float speedFactor)
+    void CmdSpawnMinion(GameObject runnerStart, GameObject runnerEnd, float speedFactor, float sizeFuck)
     {
         // Setup runner
         var runner_obj = Instantiate(runnerPrefab, runnerStart.transform);
         var runner = runner_obj.GetComponent<Runner>();
 
-        runner_obj.GetComponent<GraphWalker>().speed *= speed_;
-        runner_obj.transform.localScale.Scale(new Vector3(speed_, speed_, speed_));
+        runner_obj.GetComponent<GraphWalker>().speed *= speedFactor;
+        runner_obj.transform.localScale.Scale(new Vector3(sizeFuck, sizeFuck, sizeFuck));
 
         runner.Init(runnerStart, team);
         // Spawn on all nodes
@@ -113,12 +111,16 @@ public class Player : NetworkBehaviour
     // works only when player is standing still
     public void TrySpawnMinion(GameObject target)
     {
-        speed_ = 1.0f;
+        float speedFactor = 1f, sizeFuck = 2f;
+
         if (perks_.isHasPerk(Perks.Speed))
-            speed_ = 5.0f;
+            speedFactor = 5f;
+
+        if (perks_.isHasPerk(Perks.Size))
+            sizeFuck = 5f;
 
         if (IsMoving()) return; // can't spawn minion while moving
-        CmdSpawnMinion(graphWalker_.currentNode, target, 1);
+        CmdSpawnMinion(graphWalker_.currentNode, target, speedFactor, sizeFuck);
     }
 
     [Server]
