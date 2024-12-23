@@ -22,7 +22,7 @@ public abstract class BotActionGenerator : MonoBehaviour
 
     public virtual void Init() {
 
-        bot_ = GetComponent<Bot> ();
+        bot_ = GetComponent<Bot>();
     }
 
     public BotAction GetRandomAction()

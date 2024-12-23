@@ -13,6 +13,7 @@ public class Bot : Player
         base.Init(startNode);
 
         actionGenerator_ = GetComponent<BotActionGenerator>();
+        actionGenerator_.Init();
 
         InvokeRepeating("Act", 2f, 2f);
         InvokeRepeating("ChangeAction", 2f, 2f);

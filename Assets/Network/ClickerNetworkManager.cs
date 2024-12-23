@@ -58,8 +58,41 @@ public class ClickerNetworkManager : NetworkManager
         playerCount += 1;
     }
 
+    void OnCreateBot()
+    {
+        if (playerCount >= Score.overallTeams.Length)
+            return;
+        Team current_team = Score.overallTeams[playerCount];
+
+        //--------------------------------------------------
+
+        GameObject botObject = null;
+        switch (current_team)
+        {
+            case Team.Bandits:   botObject = Instantiate(BanditBotPrefab);   break;
+            case Team.Knights:   botObject = Instantiate(KnightBotPrefab);   break;
+            case Team.Skeletons: botObject = Instantiate(SkeletonBotPrefab); break;
+            case Team.Wizards:   botObject = Instantiate(WizardBotPrefab);   break;
+        }
+
+        Bot bot = botObject.GetComponent<Bot>();
+
+        var playerPos = GameObject.FindGameObjectsWithTag("PlayerSpawn")[playerCount];
+        if (playerPos.TryGetComponent<ScoreHolder>(out ScoreHolder score)) {
+            score.scoreData.team = current_team;
+            score.scoreData.score = 100; // Start bonus
+        }
+
+        bot.Init(playerPos);
+    }
+
     public GameObject BanditPlayerPrefab;
     public GameObject KnightPlayerPrefab;
     public GameObject SkeletonPlayerPrefab;
     public GameObject WizardPlayerPrefab;
+
+    public GameObject BanditBotPrefab;
+    public GameObject KnightBotPrefab;
+    public GameObject SkeletonBotPrefab;
+    public GameObject WizardBotPrefab;
 }
