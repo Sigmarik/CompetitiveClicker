@@ -1988,6 +1988,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7785043138087102315}
     m_Modifications:
+    - target: {fileID: -1962418648297626491, guid: ad42543e08d14b344be8c239e24d22f8, type: 3}
+      propertyPath: _assetId
+      value: 3635496043
+      objectReference: {fileID: 0}
     - target: {fileID: 2759491062857278764, guid: ad42543e08d14b344be8c239e24d22f8, type: 3}
       propertyPath: m_Name
       value: NodeEast
@@ -5095,6 +5099,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7785043138087102315}
     m_Modifications:
+    - target: {fileID: -1962418648297626491, guid: ad42543e08d14b344be8c239e24d22f8, type: 3}
+      propertyPath: _assetId
+      value: 3635496043
+      objectReference: {fileID: 0}
     - target: {fileID: 2759491062857278764, guid: ad42543e08d14b344be8c239e24d22f8, type: 3}
       propertyPath: m_Name
       value: NodeSouth
@@ -5864,6 +5872,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7785043138087102315}
     m_Modifications:
+    - target: {fileID: -1962418648297626491, guid: ad42543e08d14b344be8c239e24d22f8, type: 3}
+      propertyPath: _assetId
+      value: 3635496043
+      objectReference: {fileID: 0}
     - target: {fileID: 2759491062857278764, guid: ad42543e08d14b344be8c239e24d22f8, type: 3}
       propertyPath: m_Name
       value: NodeWest
@@ -6645,6 +6657,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7785043138087102315}
     m_Modifications:
+    - target: {fileID: -1962418648297626491, guid: ad42543e08d14b344be8c239e24d22f8, type: 3}
+      propertyPath: _assetId
+      value: 3635496043
+      objectReference: {fileID: 0}
     - target: {fileID: 2759491062857278764, guid: ad42543e08d14b344be8c239e24d22f8, type: 3}
       propertyPath: m_Name
       value: NodeNorth
