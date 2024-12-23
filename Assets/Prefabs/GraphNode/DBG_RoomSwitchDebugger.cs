@@ -12,7 +12,7 @@ public class DBG_RoomSwitchDebugger : MonoBehaviour
     private void OnMouseDown()
     {
         Score score = new Score();
-        Team[] teams = { Team.Spiders, Team.Goblins, Team.Skeletons, Team.Wizards };
+        Team[] teams = Score.overallTeams;
         score.team = teams[Random.Range(0, 4)];
         score.score = (uint)Random.Range(0, 20);
 

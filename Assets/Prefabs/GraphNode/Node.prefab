@@ -165,12 +165,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  _SortingLayer: 0
-  _SortingLayerID: 0
-  _SortingOrder: 0
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 2924701688976075646}
   m_maskType: 0
+  _SortingLayer: 0
+  _SortingLayerID: 0
+  _SortingOrder: 0
 --- !u!1 &2759491062857278764
 GameObject:
   m_ObjectHideFlags: 0
@@ -187,6 +187,7 @@ GameObject:
   - component: {fileID: 759021079978280218}
   - component: {fileID: 3036695617260359373}
   - component: {fileID: 3568724678031590311}
+  - component: {fileID: -1962418648297626491}
   m_Layer: 0
   m_Name: Node
   m_TagString: Untagged
@@ -337,3 +338,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a86ccc45b329714ca3d0bac33e77e87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  type: 2
+  oneTickAmount: 1
+  tickLenth: 1
+  passedTime_: 0
+--- !u!114 &-1962418648297626491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2759491062857278764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 664205638
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0

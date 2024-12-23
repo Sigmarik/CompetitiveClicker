@@ -1,11 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
-public class Runner : MonoBehaviour
+public class Runner : NetworkBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [Server]
+    public void Init(GameObject start, Team team)
+    {
+        team_ = team;
+
+        var walker = gameObject.GetComponent<GraphWalker>();
+        if (walker == null)
+
+        {
+            Debug.LogError("Missing `GraphWalker` component.");
+            return;
+        }
+
+        walker.onArrival = OnArrival;
+        walker.onDeparture = OnDeparture;
+        walker.onIntArrival = OnIntArrival;
+        walker.onIntDeparture = OnIntDeparture;
+
+        walker.Bind(start);
+    }
+
+    [Server]
+    public void SendTo(GameObject finish)
     {
         TryGetComponent<GraphWalker>(out GraphWalker walker);
 
@@ -15,17 +37,45 @@ public class Runner : MonoBehaviour
             return;
         }
 
-        walker.BindAndSend(start, finish);
+        walker.GoTo(finish);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnArrival(GameObject target)
     {
+        if (TryGetComponent<AnimationController>(out AnimationController animator))
+            animator.SetSuccessful(true);
 
+        if (target == null)
+        {
+            Debug.LogWarning("Minion target is null");
+            Destroy(gameObject);
+            return;
+        }
+        if (isServer) {
+            target.TryGetComponent<ScoreHolder>(out ScoreHolder scoreHolder);
+            if (scoreHolder == null)
+            {
+                Debug.LogWarning("Can't change score: No ScoreHolder!");
+                Destroy(gameObject);
+                return;
+            }
+
+            scoreHolder.scoreData.Change(team_, 1);
+        }
+
+        Destroy(gameObject);
     }
 
-    [RequireComponentAttribute(typeof(GraphNavigator))]
-    public GameObject start;
-    [RequireComponentAttribute(typeof(GraphNavigator))]
-    public GameObject finish;
+    public void OnDeparture(GameObject target)
+    {}
+
+    public void OnIntArrival(GameObject target)
+    {
+        /* Feature: kill if enemy's cell + ANIMATION OF FAIL */
+    }
+
+    public void OnIntDeparture(GameObject target)
+    {}
+
+    private Team team_;
 }

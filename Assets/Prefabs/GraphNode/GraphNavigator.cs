@@ -199,12 +199,29 @@ public class GraphNavigator : MonoBehaviour
         neighborNavigator.publicRoutes.Add(neighborRoute);
     }
 
+    // finds node with matching team
+    public GameObject FindTeamNode(Team team)
+    {
+        foreach (var hop in nextHop)
+        {
+            GameObject node = hop.Key;
+            if (team != node.GetComponent<ScoreHolder>().team) continue;
+            return node;
+        }
+
+        return null;
+    }
+
     [System.Serializable]
     public class RouteEntry
     {
+        #if UNITY_EDITOR
         [RequireComponentAttribute(typeof(GraphNavigator))]
+        #endif
         public GameObject target;
+        #if UNITY_EDITOR
         [RequireComponentAttribute(typeof(SplineContainer))]
+        #endif
         public GameObject path;
 
         public bool inverted = false;

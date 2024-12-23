@@ -9,6 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2854280396301999501}
+  - component: {fileID: -7528507529427094876}
+  - component: {fileID: -6343763019763902701}
+  - component: {fileID: 8974039907970240257}
   m_Layer: 0
   m_Name: SkBBEG
   m_TagString: Untagged
@@ -32,6 +35,76 @@ Transform:
   - {fileID: 7248826269045582233}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-7528507529427094876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3455713113593311512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 2098380991
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
+--- !u!114 &-6343763019763902701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3455713113593311512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2723652956da1c6f4a7818732dc08d26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  team: 1
+  runnerPrefab: {fileID: 469107127198875900, guid: 06001ec0500738649944f77a5acd0d99, type: 3}
+--- !u!114 &8974039907970240257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3455713113593311512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11ca5b009940fc246ab60c33bcc9c315, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  currentNode: {fileID: 0}
+  hopInfo:
+    splineObject: {fileID: 0}
+    spline:
+      m_EditModeType: 1
+      m_Knots: []
+      m_MetaData: []
+      m_Closed: 0
+      m_IntData:
+        m_Data: []
+      m_FloatData:
+        m_Data: []
+      m_Float4Data:
+        m_Data: []
+      m_ObjectData:
+        m_Data: []
+    arrivalTime: 0
+    departureTime: 0
+    progress: 0
+    splineInverted: 0
+  speed: 1
 --- !u!1001 &5783955213848280126
 PrefabInstance:
   m_ObjectHideFlags: 0

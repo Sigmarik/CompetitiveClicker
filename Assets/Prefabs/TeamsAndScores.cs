@@ -1,59 +1,68 @@
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
 // TODO: Rename teams
 public enum Team
 {
-    Spiders,
+    Default,
     Skeletons,
     Wizards,
-    Goblins
+    Bandits,
+    Knights
 }
+
 
 public class Score
 {
-    public Team team = Team.Spiders;
+    public static readonly Team[] overallTeams = {Team.Skeletons, Team.Wizards, Team.Bandits, Team.Knights}; 
+
+    public Team team = Team.Default;
     public uint score = 0;
+
+    public delegate void changingAction ();
+    public changingAction onOwnershipChange;
 
     public bool Teamed()
     {
-        return score > 0;
+        if (score > 0 && team == Team.Default) {
+
+            Debug.Log("Warning! Default command shouldn't got score!");
+        }
+
+        if (score == 0 && team != Team.Default) {
+
+            Debug.Log("Warning! Team got zero score!");
+        }
+
+        return score > 0 && team != Team.Default;
     }
 
     private static readonly Dictionary<Team, string> TEAM_NAMES =
     new Dictionary<Team, string>{
+        {Team.Default,   "Default"},
         {Team.Skeletons, "Skeletons"},
-        {Team.Spiders, "Spiders"},
-        {Team.Wizards, "Wizards"},
-        {Team.Goblins, "Goblins"}
+        {Team.Wizards,   "Wizards"},
+        {Team.Bandits,   "Bandits"},
+        {Team.Knights,   "Knights"}
     };
 
     public static readonly Dictionary<Team, Color> TEAM_COLORS =
     new Dictionary<Team, Color>{
+        {Team.Default,   new Color(0.75f, 0.75f, 0.75f)},
         {Team.Skeletons, new Color(0.9396226f, 0.8564242f, 0.5513634f)},
-        {Team.Spiders, new Color(0.03493261f, 1.0f, 0.0f)},
-        {Team.Wizards, new Color(1.0f, 0.0f, 0.9592928f)},
-        {Team.Goblins, new Color(0.3215685f, 0.9019516f, 1.0f)}
+        {Team.Wizards,   new Color(1.0f, 0.0f, 0.9592928f)},
+        {Team.Bandits,   new Color(0.03493261f, 1.0f, 0.0f)},
+        {Team.Knights,   new Color(0.3215685f, 0.9019516f, 1.0f)}
     };
-    public static readonly Color NEUTRAL_COLOR = new Color(0.75f, 0.75f, 0.75f);
 
     public Color GetColor()
     {
-        if (!Teamed())
-        {
-            return NEUTRAL_COLOR;
-        }
-
         return TEAM_COLORS[team];
     }
 
     public string HolderName()
     {
-        if (!Teamed())
-        {
-            return "None";
-        }
-
         return TEAM_NAMES[team];
     }
 
@@ -79,6 +88,8 @@ public class Score
             {
                 team = effector;
                 score = (uint)(change - score);
+
+                onOwnershipChange?.Invoke();
             }
             else
             {
