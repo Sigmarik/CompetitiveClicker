@@ -111,8 +111,8 @@ public class GraphNavigator : MonoBehaviour
         BezierKnot first = spline[firstIndex];
         BezierKnot last = spline[lastIndex];
 
-        first.Position = transform.position - route.path.transform.position;
-        last.Position = target.transform.position - route.path.transform.position;
+        first.Position = route.path.transform.worldToLocalMatrix.MultiplyPoint3x4(transform.position);
+        last.Position = route.path.transform.worldToLocalMatrix.MultiplyPoint3x4(target.transform.position);
 
         spline.SetKnot(firstIndex, first);
         spline.SetKnot(lastIndex, last);
