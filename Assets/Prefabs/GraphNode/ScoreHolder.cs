@@ -14,7 +14,16 @@ public class ScoreHolder: NetworkBehaviour {
     }
 
     public override void OnStartServer() {
+        base.OnStartServer();
+
         bank = FindObjectOfType<ResourceBank>();
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+
+        animator_ = gameObject.GetComponent<ScoreAnimator>();
     }
 
     void Update() {
@@ -29,6 +38,9 @@ public class ScoreHolder: NetworkBehaviour {
         if (isClient) {
             scoreData.team = team;
             scoreData.score = score;
+
+            // TODO Optimize
+            animator_.UpdateScore(scoreData);
         }
     }
 
@@ -80,4 +92,6 @@ public class ScoreHolder: NetworkBehaviour {
     public uint tickLenth = 1;          //time to accrue gold to player
 
     [SerializeField] private float passedTime_ = 0;
+
+    private ScoreAnimator animator_;
 }

@@ -51,15 +51,16 @@ public class Runner : NetworkBehaviour
             Destroy(gameObject);
             return;
         }
-        if (isServer) {
-            target.TryGetComponent<ScoreHolder>(out ScoreHolder scoreHolder);
-            if (scoreHolder == null)
-            {
-                Debug.LogWarning("Can't change score: No ScoreHolder!");
-                Destroy(gameObject);
-                return;
-            }
 
+        target.TryGetComponent<ScoreHolder>(out ScoreHolder scoreHolder);
+        if (scoreHolder == null)
+        {
+            Debug.LogWarning("Can't change score: No ScoreHolder!");
+            Destroy(gameObject);
+            return;
+        }
+
+        if (isServer) {
             scoreHolder.scoreData.Change(team_, 1);
         }
 
