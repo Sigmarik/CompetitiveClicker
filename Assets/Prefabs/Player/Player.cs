@@ -76,10 +76,7 @@ public class Player : NetworkBehaviour
     [Command]
     public void CmdTryGoTo(GameObject target)
     {
-        if (graphWalker_.hopInfo.stage == GraphWalker.HopInfo.HopStage.OnTheWay) return; // can't spawn minion while moving
-        // TODO: поправить получение команды цели
-        // if (!target.GetComponent<SCORE_HOLDER>()) return;
-        // if (team != target.GetComponent<SCORE_HOLDER>().TEAM) return; // can only go to my node
+        if (IsMoving()) return; // can't spawn minion while moving
         graphWalker_.GoTo(target);
     }
 
@@ -94,10 +91,7 @@ public class Player : NetworkBehaviour
     // works only when player is standing still
     public void TrySpawnMinion(GameObject target)
     {
-        // TODO: поправить состояния движения
-        if (graphWalker_.hopInfo.stage == GraphWalker.HopInfo.HopStage.OnTheWay) return; // can't spawn minion while moving
-        // if (!target.GetComponent<SCORE_HOLDER>()) return;             // can only go to enemy node
-        // if (team != target.GetComponent<SCORE_HOLDER>().TEAM) return; // can only go to enemy node
+        if (IsMoving()) return; // can't spawn minion while moving
         CmdSpawnMinion(graphWalker_.currentNode, target);
     }
 
