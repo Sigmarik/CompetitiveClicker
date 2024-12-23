@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class Bot : Player
 {
-    private BotAction          currentAction_ = new BotActionAFK();
     private BotActionGenerator actionGenerator_;
+    private BotAction          currentAction_ = new BotActionAFK();
 
     // TODO: someone check this funtion
     [Server]
@@ -26,6 +26,7 @@ public class Bot : Player
         }
     }
 
+    [Server]
     void Act() {
 
         currentAction_.Act(this);

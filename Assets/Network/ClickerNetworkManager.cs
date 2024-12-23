@@ -46,7 +46,6 @@ public class ClickerNetworkManager : NetworkManager
         // Typically Player would be a component you write with syncvars or properties
         Player player = player_object.GetComponent<Player>();
 
-        // Currently anyone starts at cude
         var playerPos = GameObject.FindGameObjectsWithTag("PlayerSpawn")[playerCount];
         if (playerPos.TryGetComponent<ScoreHolder>(out ScoreHolder score)) {
             score.scoreData.team = current_team;
@@ -58,6 +57,8 @@ public class ClickerNetworkManager : NetworkManager
         player.Init(playerPos);
 
         playerCount += 1;
+        // TODO: delete
+        OnCreateBot();
     }
 
     void OnCreateBot()
@@ -85,7 +86,9 @@ public class ClickerNetworkManager : NetworkManager
             score.scoreData.score = 100; // Start bonus
         }
 
+        NetworkServer.Spawn(botObject);
         bot.Init(playerPos);
+        playerCount += 1;
     }
 
     public GameObject BanditPlayerPrefab;

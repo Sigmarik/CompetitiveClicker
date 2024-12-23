@@ -219,7 +219,7 @@ public class GraphNavigator : MonoBehaviour
     // finds a random node with other team
     public GameObject FindRandomEnemyTeamNode(Team team)
     {
-        List<GameObject> enemyTeamNodes = FindTeamNodes(team);
+        List<GameObject> enemyTeamNodes = FindEnemyTeamNodes(team);
         if (enemyTeamNodes.Count == 0) return null;
 
         int randomIndex = UnityEngine.Random.Range(0, enemyTeamNodes.Count);

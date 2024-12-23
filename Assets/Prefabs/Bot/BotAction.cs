@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Mirror;
 using UnityEngine;
 
@@ -14,18 +15,29 @@ public class BotActionSpawnLine: BotAction {
     GameObject target_;
     int spawnCount_;
 
+    const int SPAWN_DELAY = 1000;
+
+    //--------------------------------------------------
+
     public BotActionSpawnLine(GameObject target, int spawnCount)
     {
         target_     = target;
         spawnCount_ = spawnCount;
     }
 
-    public override void Act(Bot bot)
+    public override async void Act(Bot bot)
     {
         for (int i = 0; i < spawnCount_; ++i)
         {
-            bot.TrySpawnMinion(target_);
+            var task = SpawnMinionWithDelay(bot, target_, i);
+            await task;
         }
+    }
+
+    private async Task SpawnMinionWithDelay(Bot bot, GameObject target, int index)
+    {
+        await Task.Delay(index * SPAWN_DELAY);
+        bot.TrySpawnMinion(target);
     }
 }
 

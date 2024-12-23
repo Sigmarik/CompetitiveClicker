@@ -8,7 +8,7 @@ public enum BotActionType {
     Move,
 }
 
-public abstract class BotActionGenerator : MonoBehaviour
+public class BotActionGenerator : MonoBehaviour
 {
     private Bot bot_;
 
@@ -66,73 +66,5 @@ public abstract class BotActionGenerator : MonoBehaviour
 
         // invalid propabilities
         throw new System.InvalidOperationException("The probabilities array must sum to 1.");
-    }
-}
-
-public class EasyBotActionGenerator : BotActionGenerator {
-
-    public override void Init()
-    {
-        base.Init();
-        actionTypes = new BotActionType[]
-        {
-            BotActionType.AFK,
-            BotActionType.SpawnLine,
-            BotActionType.SpawnHorde,
-            BotActionType.Move,
-        };
-
-        actionTypeProbabilities = new float[]
-        {
-            0.25f,
-            0.25f,
-            0.0f,
-            0.5f,
-        };
-
-        spawnCounts = new int[]
-        {
-            1,
-            2,
-        };
-
-        spawnCountProbabilities = new float[]
-        {
-            0.5f,
-            0.5f,
-        };
-    }
-}
-
-public class HardBotActionGenerator : BotActionGenerator {
-
-    public override void Init()
-    {
-        base.Init();
-        actionTypes = new BotActionType[]
-        {
-            BotActionType.SpawnLine,
-            BotActionType.SpawnHorde,
-            BotActionType.Move
-        };
-
-        actionTypeProbabilities = new float[]
-        {
-            0.5f,
-            0.25f,
-            0.25f,
-        };
-
-        spawnCounts = new int[]
-        {
-            2,
-            5,
-        };
-
-        spawnCountProbabilities = new float[]
-        {
-            0.5f,
-            0.5f
-        };
     }
 }

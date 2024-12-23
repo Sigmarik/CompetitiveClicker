@@ -44,7 +44,7 @@ public class Player : NetworkBehaviour
         TeleportTo(startNode);
     }
 
-    [Command]
+    [Command(requiresAuthority = false)]
     void CmdSpawnMinion(GameObject runnerStart, GameObject runnerEnd)
     {
         // Setup runner
@@ -73,10 +73,11 @@ public class Player : NetworkBehaviour
 
     // checks target node team
     // and goes there
-    [Command]
+    [Command(requiresAuthority = false)]
     public void CmdTryGoTo(GameObject target)
     {
         if (IsMoving()) return; // can't spawn minion while moving
+        if (target == graphWalker_.currentNode) return;
         graphWalker_.GoTo(target);
     }
 
