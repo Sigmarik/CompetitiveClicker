@@ -13,6 +13,10 @@ public class ScoreHolder: NetworkBehaviour {
         };
     }
 
+    public override void OnStartServer() {
+        bank = FindObjectOfType<ResourceBank>();
+    }
+
     void Update() {
         // Cursed, but design of scores are awfull and unmanagable from network standpoint
 
