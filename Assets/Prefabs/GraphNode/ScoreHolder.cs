@@ -22,8 +22,6 @@ public class ScoreHolder: NetworkBehaviour {
     public override void OnStartClient()
     {
         base.OnStartClient();
-
-        animator_ = gameObject.GetComponent<ScoreAnimator>();
     }
 
     void Update() {
@@ -40,6 +38,10 @@ public class ScoreHolder: NetworkBehaviour {
             scoreData.score = score;
 
             // TODO Optimize
+            if (animator_ == null) {
+                animator_ = gameObject.GetComponent<ScoreAnimator>();
+            }
+
             animator_.UpdateScore(scoreData);
         }
     }
@@ -93,5 +95,5 @@ public class ScoreHolder: NetworkBehaviour {
 
     [SerializeField] private float passedTime_ = 0;
 
-    private ScoreAnimator animator_;
+    private ScoreAnimator animator_ = null;
 }
