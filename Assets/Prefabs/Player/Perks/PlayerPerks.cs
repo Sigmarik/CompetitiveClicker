@@ -35,6 +35,10 @@ public class PlayerPerks {
 
             Debug.Log("Player already have perk you are trying to add: " + perk);
         }
+        else {
+
+            Invoke(removePerk(perk));
+        }
     }
 
     public void removePerk (Perk perk) {
