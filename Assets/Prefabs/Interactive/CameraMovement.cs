@@ -14,6 +14,23 @@ public class CameraMovement : MonoBehaviour
         delayedDelta_ = deltaPosition_;
     }
 
+    public void Teleport(Vector3 location, float rotation)
+    {
+        anchorPoint_.x = location.x;
+        anchorPoint_.z = location.z;
+        delayedAnchor_ = anchorPoint_;
+
+        Vector3 flatplaneDelta = Vector2.zero;
+        flatplaneDelta.y = deltaPosition_.y;
+        flatplaneDelta.x = new Vector2(deltaPosition_.x, deltaPosition_.z).magnitude;
+
+        Quaternion quat = Quaternion.Euler(0, rotation, 0);
+        deltaPosition_ = quat * flatplaneDelta;
+
+        delayedDelta_ = deltaPosition_;
+        transform.position = delayedAnchor_ + delayedDelta_;
+    }
+
     void Update()
     {
         transform.rotation = Quaternion.LookRotation(-delayedDelta_, Vector3.up);
@@ -125,7 +142,6 @@ public class CameraMovement : MonoBehaviour
 
     private Vector3 anchorPoint_;
     private Vector3 delayedAnchor_;
-    private Flow slopeMultiplier_;
     private Vector3 deltaPosition_;
     private Vector3 delayedDelta_;
 
