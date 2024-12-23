@@ -39,18 +39,18 @@ public class Player : NetworkBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha2)) {
             
-            if(perks_.buyPerk(Perks.MashroomSpeed)) {
-                
-                CmdChangeSpeed(5);
-                StartCoroutine(mashroomSpeedRemover());
+            if(perks_.buyPerk(Perks.Size)) {
+
+                StartCoroutine(sizeRemover());
             }
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha3)) {
             
-            if(perks_.buyPerk(Perks.Size)) {
-
-                StartCoroutine(sizeRemover());
+            if(perks_.buyPerk(Perks.MashroomSpeed)) {
+                
+                CmdChangeSpeed(10);
+                StartCoroutine(mashroomSpeedRemover());
             }
         }
     }
@@ -79,7 +79,7 @@ public class Player : NetworkBehaviour
         yield return new WaitForSeconds(5);
         perks_.removePerk(Perks.MashroomSpeed);
 
-        CmdChangeSpeed(0.2f);
+        CmdChangeSpeed(0.1f);
     }
     //End of Kalische (jokes on you it will never ever ends)
 
