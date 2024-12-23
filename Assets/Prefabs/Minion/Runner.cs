@@ -43,7 +43,7 @@ public class Runner : NetworkBehaviour
     public void OnArrival(GameObject target)
     {
         if (TryGetComponent<AnimationController>(out AnimationController animator))
-            animator.SetSuccessful(true);
+            animator.PlayAnimation(true);
 
         if (target == null)
         {
@@ -51,7 +51,8 @@ public class Runner : NetworkBehaviour
             Destroy(gameObject);
             return;
         }
-        if (isServer) {
+        if (isServer)
+        {
             target.TryGetComponent<ScoreHolder>(out ScoreHolder scoreHolder);
             if (scoreHolder == null)
             {
@@ -67,7 +68,7 @@ public class Runner : NetworkBehaviour
     }
 
     public void OnDeparture(GameObject target)
-    {}
+    { }
 
     public void OnIntArrival(GameObject target)
     {
@@ -75,7 +76,7 @@ public class Runner : NetworkBehaviour
     }
 
     public void OnIntDeparture(GameObject target)
-    {}
+    { }
 
     private Team team_;
 }
