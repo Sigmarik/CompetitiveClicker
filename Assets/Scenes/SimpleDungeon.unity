@@ -488,7 +488,7 @@ MonoBehaviour:
         z: 2.1782331
       Rotation:
         value:
-          x: 0.000001391075
+          x: 0.0000013910745
           y: 0.99999815
           z: 0.00079893327
           w: -0.0017446299
@@ -506,7 +506,7 @@ MonoBehaviour:
         z: 2.1782331
       Rotation:
         value:
-          x: 0.000001391075
+          x: 0.0000013910745
           y: 0.99999815
           z: 0.00079893327
           w: -0.0017446299
@@ -1644,7 +1644,7 @@ MonoBehaviour:
         z: 2.3779023
       Rotation:
         value:
-          x: -0.0000061564474
+          x: -0.0000061564438
           y: 0.99996436
           z: -0.00073182315
           w: -0.008416725
@@ -1662,7 +1662,7 @@ MonoBehaviour:
         z: 2.3779023
       Rotation:
         value:
-          x: 0.000008037597
+          x: 0.000008037606
           y: 0.99996436
           z: -0.0007319426
           w: -0.008416716
@@ -2006,9 +2006,9 @@ MonoBehaviour:
         z: 1.0188334
       Rotation:
         value:
-          x: -0.0016575535
-          y: 0.10200726
-          z: 0.0005802631
+          x: -0.0016525561
+          y: 0.10200736
+          z: 0.0006289995
           w: 0.9947821
     - Position:
         x: 2
@@ -2024,9 +2024,9 @@ MonoBehaviour:
         z: 2.8129177
       Rotation:
         value:
-          x: -0.00086281303
-          y: 0.05106975
-          z: -0.0000618644
+          x: -0.00085204793
+          y: 0.05106993
+          z: 0.00014865196
           w: 0.9986947
     - Position:
         x: 2
@@ -2237,7 +2237,7 @@ MonoBehaviour:
         value:
           x: 0.00072876137
           y: 0.0083799595
-          z: -0.000005784961
+          z: -0.0000057849593
           w: 0.99996465
     - Position:
         x: 0.93244934
@@ -2255,7 +2255,7 @@ MonoBehaviour:
         value:
           x: 0.000729286
           y: 0.008379915
-          z: 0.000056807967
+          z: 0.000056808003
           w: 0.99996465
     m_MetaData:
     - Mode: 0
@@ -3010,23 +3010,23 @@ MonoBehaviour:
           z: -0
           w: 0.99861085
     - Position:
-        x: -7.1484995
+        x: -7.1484985
         y: 0
-        z: 30.63203
+        z: 30.479504
       TangentIn:
         x: -0
         y: -0
-        z: -0.4195487
+        z: -0.40447995
       TangentOut:
         x: 0
         y: 0
-        z: 0.4195487
+        z: 0.40447995
       Rotation:
         value:
-          x: 0.0000041966396
-          y: -0.076237485
-          z: -0.00005488673
-          w: 0.9970896
+          x: 0.0000068603067
+          y: -0.07909523
+          z: -0.000086463035
+          w: 0.99686706
     m_MetaData:
     - Mode: 0
       Tension: 0.5
@@ -4991,35 +4991,35 @@ MonoBehaviour:
       TangentIn:
         x: -0
         y: -0
-        z: -3.2068188
+        z: -3.1859763
       TangentOut:
         x: 0
         y: 0
-        z: 2.508474
+        z: 2.4641995
       Rotation:
         value:
-          x: -0.0003577829
-          y: -0.042853996
-          z: 0.00834092
-          w: 0.9990465
+          x: -0.0004089318
+          y: -0.04384137
+          z: 0.009318157
+          w: 0.9989949
     - Position:
-        x: 0.8514969
+        x: 0.8514978
         y: 0
-        z: 35.632034
+        z: 35.479507
       TangentIn:
         x: -0
         y: -0
-        z: -0.67307454
+        z: -0.6580508
       TangentOut:
         x: 0
         y: 0
-        z: 0.67307454
+        z: 0.6580508
       Rotation:
         value:
-          x: -0.000012328886
-          y: -0.08563221
-          z: 0.00014344603
-          w: 0.9963268
+          x: -0.00001573345
+          y: -0.08760225
+          z: 0.00017891052
+          w: 0.99615544
     m_MetaData:
     - Mode: 0
       Tension: 0.5
@@ -5231,7 +5231,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7154385187522938399, guid: cb8e176ca720a7e41b4f10eb6b8a4432, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -84.17886
+      value: -84.02634
       objectReference: {fileID: 0}
     - target: {fileID: 7154385187522938399, guid: cb8e176ca720a7e41b4f10eb6b8a4432, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5812,9 +5812,9 @@ MonoBehaviour:
         z: 2.1932616
       Rotation:
         value:
-          x: -0.00056200987
+          x: -0.00056200527
           y: 0.70590854
-          z: 0.00056011043
+          z: 0.00056011503
           w: 0.70830256
     - Position:
         x: 22
@@ -5830,9 +5830,9 @@ MonoBehaviour:
         z: 2.1932616
       Rotation:
         value:
-          x: -0.00056200987
+          x: -0.00056200527
           y: 0.70590854
-          z: 0.00056011043
+          z: 0.00056011503
           w: 0.70830256
     m_MetaData:
     - Mode: 0
@@ -5913,21 +5913,21 @@ MonoBehaviour:
     - Position:
         x: 0.1481781
         y: 0
-        z: 0.31747437
+        z: 0.47000122
       TangentIn:
         x: -0
         y: -0
-        z: -2.3776941
+        z: -2.3779035
       TangentOut:
         x: 0
         y: 0
-        z: 2.3776941
+        z: 2.3779035
       Rotation:
         value:
-          x: 0.00051481434
-          y: 0.71081185
-          z: -0.0005202527
-          w: 0.7033817
+          x: 0.00051644986
+          y: 0.7130639
+          z: -0.00051855954
+          w: 0.7010985
     - Position:
         x: 23.923782
         y: -0.034805298
@@ -5935,17 +5935,17 @@ MonoBehaviour:
       TangentIn:
         x: -0
         y: -0
-        z: -2.3776941
+        z: -2.3779035
       TangentOut:
         x: 0
         y: 0
-        z: 2.3776941
+        z: 2.3779035
       Rotation:
         value:
-          x: 0.00052170915
-          y: 0.71081185
-          z: -0.0005134299
-          w: 0.7033817
+          x: 0.00052385696
+          y: 0.7130639
+          z: -0.00051127677
+          w: 0.7010985
     m_MetaData:
     - Mode: 0
       Tension: 0.5
@@ -6751,6 +6751,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7785043138087102315, guid: 4e609f096400f6549a9d8589f82200e9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8262585030060019389, guid: 4e609f096400f6549a9d8589f82200e9, type: 3}
+      propertyPath: publicRoutes.Array.data[0].inverted
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8262585030060019389, guid: 4e609f096400f6549a9d8589f82200e9, type: 3}
+      propertyPath: publicRoutes.Array.data[1].inverted
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

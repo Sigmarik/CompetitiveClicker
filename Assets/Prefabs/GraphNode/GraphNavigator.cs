@@ -66,6 +66,12 @@ public class GraphNavigator : MonoBehaviour
     private void OnDrawGizmos()
     {
         FixPathSplines();
+        RemoveDuplicates();
+
+        foreach (RouteEntry entry in publicRoutes)
+        {
+            ReplicatePath(entry);
+        }
     }
 
     public void FixPathSplines()
@@ -215,13 +221,13 @@ public class GraphNavigator : MonoBehaviour
     [System.Serializable]
     public class RouteEntry
     {
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         [RequireComponentAttribute(typeof(GraphNavigator))]
-        #endif
+#endif
         public GameObject target;
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         [RequireComponentAttribute(typeof(SplineContainer))]
-        #endif
+#endif
         public GameObject path;
 
         public bool inverted = false;
