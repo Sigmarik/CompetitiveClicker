@@ -24,12 +24,12 @@ public class AnimationController : MonoBehaviour
     }
 
     // Changes the death animation from outwards rim to inwards beam.
-    public void SetSuccessful(bool successful = true)
+    public void PlayAnimation(bool successful = true)
     {
         RimExplosion explosion = GetComponentInChildren<RimExplosion>();
         if (explosion != null)
         {
-            explosion.collapseInwards = successful;
+            explosion.PlayAnimation(successful);
         }
     }
 
