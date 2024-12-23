@@ -9,6 +9,7 @@ public class Player : NetworkBehaviour
     public GameObject runnerPrefab;
 
     private GraphWalker graphWalker_;
+    private PlayerPerksShop perks_;
 
     //--------------------------------------------------
 
@@ -20,15 +21,10 @@ public class Player : NetworkBehaviour
 
         if (!isLocalPlayer) return;
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            var runnerEnd = GameObject.Find("Sphere");
-        
-            if (runnerEnd == graphWalker_.currentNode) {
-                runnerEnd = GameObject.Find("Cube");
-            }
 
-            TrySpawnMinion(runnerEnd);
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            
+            perks_.buyPerk(Perks.Speed);
         }
     }
 
@@ -38,6 +34,8 @@ public class Player : NetworkBehaviour
         SaveGraphWalker();
         TeleportTo(start_node);
         RpcInit(start_node);
+
+        perks_= new PlayerPerksShop(team);
     }
 
     [ClientRpc]
@@ -52,6 +50,12 @@ public class Player : NetworkBehaviour
         // Setup runner
         var runner_obj = Instantiate(runnerPrefab, runnerStart.transform);
         var runner = runner_obj.GetComponent<Runner>();
+        
+        if (perks_.isHasPerk(Perks.Speed)) {
+
+            runner_obj.GetComponent<GraphWalker>().speed *= 100;
+        }
+
         runner.Init(runnerStart, team);
         // Spawn on all nodes
         NetworkServer.Spawn(runner_obj);
