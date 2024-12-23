@@ -47,7 +47,7 @@ public class ResourceBank : NetworkBehaviour
     [Server]
     public void AddIncome(Team team, double income)
     {
-        player_income_[team] += income;
+        player_bank_[team] += income;
     }
 
     [Server]

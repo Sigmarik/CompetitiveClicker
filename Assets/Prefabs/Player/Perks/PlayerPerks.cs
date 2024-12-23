@@ -18,7 +18,10 @@ public struct Perk {
 
 public class PlayerPerks {
 
-    public PlayerPerks () {}
+    public PlayerPerks () {
+
+        perks_ = new HashSet<string>();
+    }
 
     public void addPerk (Perk perk) {
 
