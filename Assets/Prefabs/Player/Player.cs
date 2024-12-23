@@ -1,3 +1,4 @@
+using System;
 using Mirror;
 using UnityEngine;
 
@@ -42,6 +43,16 @@ public class Player : NetworkBehaviour
     void RpcInit(GameObject startNode) {
         SaveGraphWalker();
         TeleportTo(startNode);
+
+        GameObject center = GameObject.Find("crates_stacked");
+        gameObject.transform.LookAt(center.transform);
+
+        if (isLocalPlayer) {
+            var camera = FindObjectOfType<CameraMovement>();
+            Vector3 forward = gameObject.transform.forward;
+            float azimuth = (float) Math.Atan2(forward.z, forward.x) * Mathf.Rad2Deg;
+            camera.Teleport(gameObject.transform.position, azimuth);
+        }
     }
 
     [Command(requiresAuthority = false)]
