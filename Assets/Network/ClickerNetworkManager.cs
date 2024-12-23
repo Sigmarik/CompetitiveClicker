@@ -48,8 +48,10 @@ public class ClickerNetworkManager : NetworkManager
 
         // Currently anyone starts at cude
         var playerPos = GameObject.FindGameObjectsWithTag("PlayerSpawn")[playerCount];
-        if (playerPos.TryGetComponent<ScoreHolder>(out ScoreHolder score))
+        if (playerPos.TryGetComponent<ScoreHolder>(out ScoreHolder score)) {
             score.scoreData.team = current_team;
+            score.scoreData.score = 100; // Start bonus
+        }
 
         // call this to use this gameobject as the primary controller
         NetworkServer.AddPlayerForConnection(conn, player_object);

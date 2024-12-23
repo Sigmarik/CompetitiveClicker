@@ -39,7 +39,6 @@ public class ResourceBank : NetworkBehaviour
         player_bank_[Team.Default  ] += player_income_[Team.Default  ];
     }
 
-    [Server]
     public uint GetMoney(Team team)
     {
         return (uint)player_bank_[team];
