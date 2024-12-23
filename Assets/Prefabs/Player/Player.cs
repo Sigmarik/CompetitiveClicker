@@ -14,6 +14,10 @@ public class Player : NetworkBehaviour
 
     void Update()
     {
+        if (isServer) {
+            TryEscape();
+        }
+
         if (!isLocalPlayer) return;
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -26,8 +30,6 @@ public class Player : NetworkBehaviour
 
             TrySpawnMinion(runnerEnd);
         }
-
-        // TryEscape();
     }
 
     [Server]
@@ -124,8 +126,6 @@ public class Player : NetworkBehaviour
 
     private Team GetCurrentNodeTeam()
     {
-        // TODO: uncomment
-        // return graphWalker_.currentNode.GetComponent<NodeMechanics>().team;
-        return Team.Default;
+        return graphWalker_.currentNode.GetComponent<ScoreHolder>().team;
     }
 }
