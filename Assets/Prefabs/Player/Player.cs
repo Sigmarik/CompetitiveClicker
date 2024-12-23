@@ -36,6 +36,13 @@ public class Player : NetworkBehaviour
                 StartCoroutine(speedRemover());
             }
         }
+        if (Input.GetKeyDown(KeyCode.Alpha1)) {
+            
+            if(perks_.buyPerk(Perks.Size)) {
+
+                StartCoroutine(sizeRemover());
+            }
+        }
     }
 
      //Kalische
@@ -43,6 +50,11 @@ public class Player : NetworkBehaviour
 
         yield return new WaitForSeconds(5);
         perks_.removePerk(Perks.Speed);
+    }
+    private IEnumerator sizeRemover () {
+
+        yield return new WaitForSeconds(5);
+        perks_.removePerk(Perks.Size);
     }
     //End of Kalische (jokes on you it will never ever ends)
 
@@ -111,13 +123,19 @@ public class Player : NetworkBehaviour
     // works only when player is standing still
     public void TrySpawnMinion(GameObject target)
     {
-        float speedFactor = 1f, sizeFuck = 2f;
+        float speedFactor = 1f, sizeFuck = 1f;
 
-        if (perks_.isHasPerk(Perks.Speed))
-            speedFactor = 5f;
+        if (perks_.isHasPerk(Perks.Speed)) {
 
-        if (perks_.isHasPerk(Perks.Size))
-            sizeFuck = 5f;
+            speedFactor *= 5f;
+            sizeFuck /= 2f;
+        }
+
+        if (perks_.isHasPerk(Perks.Size)) {
+
+            speedFactor /= 5f;
+            sizeFuck *= 2f;
+        }
 
         if (IsMoving()) return; // can't spawn minion while moving
         CmdSpawnMinion(graphWalker_.currentNode, target, speedFactor, sizeFuck);
