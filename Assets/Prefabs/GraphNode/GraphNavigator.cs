@@ -205,8 +205,7 @@ public class GraphNavigator : MonoBehaviour
         foreach (var hop in nextHop)
         {
             GameObject node = hop.Key;
-            // TODO: uncomment
-            // if (team != node.GetComponent<NodeMechanics>().team) continue;
+            if (team != node.GetComponent<ScoreHolder>().team) continue;
             return node;
         }
 
