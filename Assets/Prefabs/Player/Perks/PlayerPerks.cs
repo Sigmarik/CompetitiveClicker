@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -26,6 +27,10 @@ public class PlayerPerks {
     public void addPerk (Perk perk) {
 
         bool added = perks_.Add(perk.name);
+
+        Debug.Log("Perk " + isHasPerk(perk));
+        Debug.Log("Speed " + isHasPerk(Perks.Speed));
+
         if (!added) {
 
             Debug.Log("Player already have perk you are trying to add: " + perk);
