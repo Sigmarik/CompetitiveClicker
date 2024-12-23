@@ -80,7 +80,7 @@ public class Player : NetworkBehaviour
         var runner = runner_obj.GetComponent<Runner>();
 
         runner_obj.GetComponent<GraphWalker>().speed *= speedFactor;
-        runner_obj.transform.localScale.Scale(new Vector3(sizeFuck, sizeFuck, sizeFuck));
+        runner.transform.localScale.Scale(new Vector3(sizeFuck, sizeFuck, sizeFuck));
 
         runner.Init(runnerStart, team);
         // Spawn on all nodes
