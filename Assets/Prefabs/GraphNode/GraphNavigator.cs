@@ -233,14 +233,58 @@ public class GraphNavigator : MonoBehaviour
     // finds node with matching team
     public GameObject FindTeamNode(Team team)
     {
+        if (FindTeamNodes(team).Count == 0) return null;
+        return FindTeamNodes(team) [0];
+    }
+
+    // finds a random node with matching team
+    public GameObject FindRandomTeamNode(Team team)
+    {
+        List<GameObject> teamNodes = FindTeamNodes(team);
+        if (teamNodes.Count == 0) return null;
+
+        int randomIndex = UnityEngine.Random.Range(0, teamNodes.Count);
+        return teamNodes[randomIndex];
+    }
+
+    // finds a random node with other team
+    public GameObject FindRandomEnemyTeamNode(Team team)
+    {
+        List<GameObject> enemyTeamNodes = FindEnemyTeamNodes(team);
+        if (enemyTeamNodes.Count == 0) return null;
+
+        int randomIndex = UnityEngine.Random.Range(0, enemyTeamNodes.Count);
+        return enemyTeamNodes[randomIndex];
+    }
+
+    // finds all nodes with matching team
+    public List<GameObject> FindTeamNodes(Team team)
+    {
+        List<GameObject> answer = new List<GameObject>();
+
         foreach (var hop in nextHop)
         {
             GameObject node = hop.Key;
             if (team != node.GetComponent<ScoreHolder>().team) continue;
-            return node;
+            answer.Add(node);
         }
 
-        return null;
+        return answer;
+    }
+
+    // finds all nodes with matching team
+    public List<GameObject> FindEnemyTeamNodes(Team team)
+    {
+        List<GameObject> answer = new List<GameObject>();
+
+        foreach (var hop in nextHop)
+        {
+            GameObject node = hop.Key;
+            if (team == node.GetComponent<ScoreHolder>().team) continue;
+            answer.Add(node);
+        }
+
+        return answer;
     }
 
     [System.Serializable]

@@ -50,7 +50,7 @@ public class ScoreHolder: NetworkBehaviour {
     void OnMouseDown() {
         var localPlayer = NetworkClient.localPlayer.GetComponent<Player>();
         if (localPlayer.team == team) {
-            localPlayer.CmdTryGoTo(gameObject);
+            localPlayer.TryGoTo(gameObject);
         } else {
             localPlayer.TrySpawnMinion(gameObject);
         }

@@ -8,12 +8,21 @@ public struct CreateCharacterMessage : NetworkMessage {}
 public class ClickerNetworkManager : NetworkManager
 {
     private int playerCount = 0;
+    private float lastJoinedTime;
 
     public override void OnStartServer()
     {
         base.OnStartServer();
 
         NetworkServer.RegisterHandler<CreateCharacterMessage>(OnCreateCharacter);
+    }
+
+    void Update() {
+        if (playerCount > 0 && Time.time - lastJoinedTime > 20.0f) {
+            while (playerCount < Score.overallTeams.Length) {
+                OnCreateBot();
+            }
+        }
     }
 
     public override void OnClientConnect()
@@ -46,7 +55,6 @@ public class ClickerNetworkManager : NetworkManager
         // Typically Player would be a component you write with syncvars or properties
         Player player = player_object.GetComponent<Player>();
 
-        // Currently anyone starts at cude
         var playerPos = GameObject.FindGameObjectsWithTag("PlayerSpawn")[playerCount];
         if (playerPos.TryGetComponent<ScoreHolder>(out ScoreHolder score)) {
             score.scoreData.team = current_team;
@@ -58,10 +66,47 @@ public class ClickerNetworkManager : NetworkManager
         player.Init(playerPos);
 
         playerCount += 1;
+
+        lastJoinedTime = Time.time;
+    }
+
+    void OnCreateBot()
+    {
+        if (playerCount >= Score.overallTeams.Length)
+            return;
+        Team current_team = Score.overallTeams[playerCount];
+
+        //--------------------------------------------------
+
+        GameObject botObject = null;
+        switch (current_team)
+        {
+            case Team.Bandits:   botObject = Instantiate(BanditBotPrefab);   break;
+            case Team.Knights:   botObject = Instantiate(KnightBotPrefab);   break;
+            case Team.Skeletons: botObject = Instantiate(SkeletonBotPrefab); break;
+            case Team.Wizards:   botObject = Instantiate(WizardBotPrefab);   break;
+        }
+
+        Bot bot = botObject.GetComponent<Bot>();
+
+        var playerPos = GameObject.FindGameObjectsWithTag("PlayerSpawn")[playerCount];
+        if (playerPos.TryGetComponent<ScoreHolder>(out ScoreHolder score)) {
+            score.scoreData.team = current_team;
+            score.scoreData.score = 100; // Start bonus
+        }
+
+        NetworkServer.Spawn(botObject);
+        bot.Init(playerPos);
+        playerCount += 1;
     }
 
     public GameObject BanditPlayerPrefab;
     public GameObject KnightPlayerPrefab;
     public GameObject SkeletonPlayerPrefab;
     public GameObject WizardPlayerPrefab;
+
+    public GameObject BanditBotPrefab;
+    public GameObject KnightBotPrefab;
+    public GameObject SkeletonBotPrefab;
+    public GameObject WizardBotPrefab;
 }

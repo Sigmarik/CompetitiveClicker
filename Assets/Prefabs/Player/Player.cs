@@ -1,18 +1,16 @@
 using Mirror;
 using UnityEngine;
 
-// КАПСОМ выделены методы, которых не существует,
-// но которые нужно бы добавить
 public class Player : NetworkBehaviour
 {
     public Team team;
     public GameObject runnerPrefab;
 
-    private GraphWalker graphWalker_;
+    public GraphWalker graphWalker_;
 
     //--------------------------------------------------
 
-    void Update()
+    public virtual void Update()
     {
         if (isServer) {
             TryEscape();
@@ -33,21 +31,26 @@ public class Player : NetworkBehaviour
     }
 
     [Server]
-    public void Init(GameObject start_node)
+    public void Init(GameObject startNode)
     {
         SaveGraphWalker();
-        TeleportTo(start_node);
-        RpcInit(start_node);
+        TeleportTo(startNode);
+        RpcInit(startNode);
     }
 
     [ClientRpc]
-    void RpcInit(GameObject start_node) {
+    void RpcInit(GameObject startNode) {
         SaveGraphWalker();
-        TeleportTo(start_node);
+        TeleportTo(startNode);
     }
 
-    [Command]
+    [Command(requiresAuthority = false)]
     void CmdSpawnMinion(GameObject runnerStart, GameObject runnerEnd)
+    {
+        SpawnMinion(runnerStart, runnerEnd);
+    }
+
+    void SpawnMinion(GameObject runnerStart, GameObject runnerEnd)
     {
         // Setup runner
         var runner_obj = Instantiate(runnerPrefab, runnerStart.transform);
@@ -73,13 +76,24 @@ public class Player : NetworkBehaviour
         graphWalker_ = walker;
     }
 
-    // checks target node team
-    // and goes there
-    [Command]
-    public void CmdTryGoTo(GameObject target)
+    [Command(requiresAuthority = false)]
+    public void CmdGoTo(GameObject target)
+    {
+        GoTo(target);
+    }
+
+    public void GoTo(GameObject target)
+    {
+        graphWalker_.GoTo(target);
+    }
+
+    public void TryGoTo(GameObject target)
     {
         if (IsMoving()) return; // can't spawn minion while moving
-        graphWalker_.GoTo(target);
+        if (target == graphWalker_.currentNode) return;
+
+        if (isServer) GoTo(target);
+        else       CmdGoTo(target);
     }
 
     void TeleportTo(GameObject target)
@@ -94,11 +108,13 @@ public class Player : NetworkBehaviour
     public void TrySpawnMinion(GameObject target)
     {
         if (IsMoving()) return; // can't spawn minion while moving
-        CmdSpawnMinion(graphWalker_.currentNode, target);
+
+        if (isServer) SpawnMinion(graphWalker_.currentNode, target);
+        else       CmdSpawnMinion(graphWalker_.currentNode, target);
     }
 
     [Server]
-    void TryEscape()
+    protected void TryEscape()
     {
         if (IsMoving())                   return;
         if (GetCurrentNodeTeam() == team) return;
