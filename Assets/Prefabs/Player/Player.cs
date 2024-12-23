@@ -13,6 +13,8 @@ public class Player : NetworkBehaviour
     private GraphWalker graphWalker_;
     private PlayerPerksShop perks_;
 
+    private float speed_;
+
     //--------------------------------------------------
 
     void Awake()
@@ -66,7 +68,9 @@ public class Player : NetworkBehaviour
         // Setup runner
         var runner_obj = Instantiate(runnerPrefab, runnerStart.transform);
         var runner = runner_obj.GetComponent<Runner>();
-        runner_obj.GetComponent<GraphWalker>().speed *= speedFactor;
+
+        runner_obj.GetComponent<GraphWalker>().speed *= speed_;
+        runner_obj.GetComponent<Transform>().localScale *= speed_;
 
         runner.Init(runnerStart, team);
         // Spawn on all nodes
@@ -109,12 +113,12 @@ public class Player : NetworkBehaviour
     // works only when player is standing still
     public void TrySpawnMinion(GameObject target)
     {
-        float speedFactor = 1.0f;
+        speed_ = 1.0f;
         if (perks_.isHasPerk(Perks.Speed))
-            speedFactor = 5.0f;
+            speed_ = 5.0f;
 
         if (IsMoving()) return; // can't spawn minion while moving
-        CmdSpawnMinion(graphWalker_.currentNode, target, speedFactor);
+        CmdSpawnMinion(graphWalker_.currentNode, target, 1);
     }
 
     [Server]
