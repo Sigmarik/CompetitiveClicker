@@ -8,12 +8,21 @@ public struct CreateCharacterMessage : NetworkMessage {}
 public class ClickerNetworkManager : NetworkManager
 {
     private int playerCount = 0;
+    private float lastJoinedTime;
 
     public override void OnStartServer()
     {
         base.OnStartServer();
 
         NetworkServer.RegisterHandler<CreateCharacterMessage>(OnCreateCharacter);
+    }
+
+    void Update() {
+        if (playerCount > 0 && Time.time - lastJoinedTime > 20.0f) {
+            while (playerCount < Score.overallTeams.Length) {
+                OnCreateBot();
+            }
+        }
     }
 
     public override void OnClientConnect()
@@ -57,8 +66,8 @@ public class ClickerNetworkManager : NetworkManager
         player.Init(playerPos);
 
         playerCount += 1;
-        // TODO: delete
-        OnCreateBot();
+
+        lastJoinedTime = Time.time;
     }
 
     void OnCreateBot()
