@@ -9,7 +9,13 @@ public class Player : NetworkBehaviour
 
     public GraphWalker graphWalker_;
 
+    private ResourceBank bank_;
+
     //--------------------------------------------------
+
+    public override void OnStartServer() {
+        bank_ = FindObjectOfType<ResourceBank>();
+    }
 
     public virtual void Update()
     {
@@ -63,6 +69,12 @@ public class Player : NetworkBehaviour
 
     void SpawnMinion(GameObject runnerStart, GameObject runnerEnd)
     {
+        if (bank_.GetMoney(team) < 1) {
+            return;
+        }
+
+        bank_.SpendMoney(team, 1);
+
         // Setup runner
         var runner_obj = Instantiate(runnerPrefab, runnerStart.transform);
         var runner = runner_obj.GetComponent<Runner>();
