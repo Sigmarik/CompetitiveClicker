@@ -8,44 +8,19 @@ public enum BotActionType {
     Move,
 }
 
-public class BotActionGenerator : MonoBehaviour
+public abstract class BotActionGenerator : MonoBehaviour
 {
-    public Bot bot_;
-    public BotActionType[] actionTypes =
-    {
-        BotActionType.AFK,
-        BotActionType.SpawnLine,
-        BotActionType.SpawnHorde,
-        BotActionType.Move
-    };
+    private Bot bot_;
 
-    public float[] actionTypeProbabilities =
-    {
-        0.25f,
-        0.25f,
-        0.0f,
-        0.5f,
-    };
+    public BotActionType[] actionTypes;
+    public float[]         actionTypeProbabilities;
+
+    public int[]   spawnCounts;
+    public float[] spawnCountProbabilities;
 
     //--------------------------------------------------
 
-    public int[] spawnCounts =
-    {
-        1,
-        2,
-        5,
-    };
-
-    public float[] spawnCountProbabilities =
-    {
-        0.5f,
-        0.25f,
-        0.25f
-    };
-
-    //--------------------------------------------------
-
-    public void Init() {
+    public virtual void Init() {
 
         bot_ = GetComponent<Bot> ();
     }
@@ -94,3 +69,70 @@ public class BotActionGenerator : MonoBehaviour
     }
 }
 
+public class EasyBotActionGenerator : BotActionGenerator {
+
+    public override void Init()
+    {
+        base.Init();
+        actionTypes = new BotActionType[]
+        {
+            BotActionType.AFK,
+            BotActionType.SpawnLine,
+            BotActionType.SpawnHorde,
+            BotActionType.Move,
+        };
+
+        actionTypeProbabilities = new float[]
+        {
+            0.25f,
+            0.25f,
+            0.0f,
+            0.5f,
+        };
+
+        spawnCounts = new int[]
+        {
+            1,
+            2,
+        };
+
+        spawnCountProbabilities = new float[]
+        {
+            0.5f,
+            0.5f,
+        };
+    }
+}
+
+public class HardBotActionGenerator : BotActionGenerator {
+
+    public override void Init()
+    {
+        base.Init();
+        actionTypes = new BotActionType[]
+        {
+            BotActionType.SpawnLine,
+            BotActionType.SpawnHorde,
+            BotActionType.Move
+        };
+
+        actionTypeProbabilities = new float[]
+        {
+            0.5f,
+            0.25f,
+            0.25f,
+        };
+
+        spawnCounts = new int[]
+        {
+            2,
+            5,
+        };
+
+        spawnCountProbabilities = new float[]
+        {
+            0.5f,
+            0.5f
+        };
+    }
+}
