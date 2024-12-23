@@ -13,7 +13,7 @@ public class Player : NetworkBehaviour
     private GraphWalker graphWalker_;
     private PlayerPerksShop perks_;
 
-    private float speed_;
+    private float speed_ = 1f;
 
     //--------------------------------------------------
 
