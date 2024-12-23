@@ -28,6 +28,16 @@ public class ScoreHolder: NetworkBehaviour {
         }
     }
 
+    [Client]
+    void OnMouseDown() {
+        var localPlayer = NetworkClient.localPlayer.GetComponent<Player>();
+        if (localPlayer.team == team) {
+            localPlayer.CmdTryGoTo(gameObject);
+        } else {
+            localPlayer.TrySpawnMinion(gameObject);
+        }
+    }
+
     [Server]
     private void accrueGoldIfNeed (float dt) {
         passedTime_ += dt;

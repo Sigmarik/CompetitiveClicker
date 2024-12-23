@@ -73,8 +73,10 @@ public class Player : NetworkBehaviour
 
     // checks target node team
     // and goes there
-    void TryGoTo(GameObject target)
+    [Command]
+    public void CmdTryGoTo(GameObject target)
     {
+        if (graphWalker_.hopInfo.stage == GraphWalker.HopInfo.HopStage.OnTheWay) return; // can't spawn minion while moving
         // TODO: поправить получение команды цели
         // if (!target.GetComponent<SCORE_HOLDER>()) return;
         // if (team != target.GetComponent<SCORE_HOLDER>().TEAM) return; // can only go to my node
@@ -90,7 +92,7 @@ public class Player : NetworkBehaviour
 
     // spawns minion under player
     // works only when player is standing still
-    void TrySpawnMinion(GameObject target)
+    public void TrySpawnMinion(GameObject target)
     {
         // TODO: поправить состояния движения
         if (graphWalker_.hopInfo.stage == GraphWalker.HopInfo.HopStage.OnTheWay) return; // can't spawn minion while moving

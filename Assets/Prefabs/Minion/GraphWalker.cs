@@ -111,6 +111,7 @@ public class GraphWalker : NetworkBehaviour
         UpdateNextHop();
 
         initialized_ = true;
+        enabled = true;
     }
 
     [System.Serializable]
