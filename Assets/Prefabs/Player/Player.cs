@@ -29,14 +29,24 @@ public class Player : NetworkBehaviour
         if (!isLocalPlayer) return;
 
 
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (Input.GetKeyDown(KeyCode.Alpha1)) {
             
             if(perks_.buyPerk(Perks.Speed)) {
 
                 StartCoroutine(speedRemover());
             }
         }
-        if (Input.GetKeyDown(KeyCode.Alpha1)) {
+
+        if (Input.GetKeyDown(KeyCode.Alpha2)) {
+            
+            if(perks_.buyPerk(Perks.MashroomSpeed)) {
+                
+                CmdChangeSpeed(5);
+                StartCoroutine(mashroomSpeedRemover());
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3)) {
             
             if(perks_.buyPerk(Perks.Size)) {
 
@@ -45,16 +55,31 @@ public class Player : NetworkBehaviour
         }
     }
 
+    [Command]
+    private void CmdChangeSpeed (float factor) {
+
+        graphWalker_.speed *= factor;
+    }
+
      //Kalische
     private IEnumerator speedRemover () {
 
         yield return new WaitForSeconds(5);
         perks_.removePerk(Perks.Speed);
     }
+
     private IEnumerator sizeRemover () {
 
         yield return new WaitForSeconds(5);
         perks_.removePerk(Perks.Size);
+    }
+
+    private IEnumerator mashroomSpeedRemover () {
+
+        yield return new WaitForSeconds(5);
+        perks_.removePerk(Perks.MashroomSpeed);
+
+        CmdChangeSpeed(0.2f);
     }
     //End of Kalische (jokes on you it will never ever ends)
 
@@ -80,7 +105,7 @@ public class Player : NetworkBehaviour
         var runner = runner_obj.GetComponent<Runner>();
 
         runner_obj.GetComponent<GraphWalker>().speed *= speedFactor;
-        runner.transform.localScale.Scale(new Vector3(sizeFuck, sizeFuck, sizeFuck));
+        runner.transform.localScale = new Vector3(sizeFuck, sizeFuck, sizeFuck);
 
         runner.Init(runnerStart, team);
         // Spawn on all nodes
