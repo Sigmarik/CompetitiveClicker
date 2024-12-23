@@ -8,6 +8,8 @@ public class RimExplosion : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        return;
+
         if (!effectCopy_)
         {
             enabled = false;
@@ -23,6 +25,8 @@ public class RimExplosion : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        return;
+
         float time = Time.time - deathTime_;
         float stage = time / animDuration_;
 
@@ -47,6 +51,8 @@ public class RimExplosion : MonoBehaviour
 
     public void PlayAnimation(bool successful = true)
     {
+        return;
+
         if (!effectCopy_)
         {
             if (selfCopy_ == null || selfCopy_.IsDestroyed())
@@ -61,7 +67,6 @@ public class RimExplosion : MonoBehaviour
             explosion.collapseInwards = successful;
             explosion.Explode();
         }
-
     }
 
     public void OnKilled()
