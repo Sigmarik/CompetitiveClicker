@@ -60,10 +60,7 @@ public class Runner : NetworkBehaviour
                 Destroy(gameObject);
                 return;
             }
-        }
 
-        if (isServer)
-        {
             scoreHolder.scoreData.Change(team_, 1);
         }
 
