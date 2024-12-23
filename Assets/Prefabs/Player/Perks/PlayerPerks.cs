@@ -37,7 +37,7 @@ public class PlayerPerks {
         }
         else {
 
-            Invoke(removePerk(perk));
+            Invoke(removePerk(perk), 5);
         }
     }
 
