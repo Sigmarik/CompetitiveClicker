@@ -55,6 +55,8 @@ public class RimExplosion : MonoBehaviour
             }
             selfCopy_.SetActive(true);
             selfCopy_.transform.position = transform.position;
+            selfCopy_.transform.localScale = transform.lossyScale;
+            selfCopy_.transform.rotation = transform.rotation;
             selfCopy_.GetComponent<RimExplosion>().Explode();
         }
 
