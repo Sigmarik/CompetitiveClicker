@@ -66,7 +66,7 @@ public class PlayerPerksShop: PlayerPerks {
 
             if (!isHasPerk(perk)) {
 
-                bank.SpendMoney(team, perk.cost);
+                bank.CmdSpendMoney(team, perk.cost);
                 addPerk(perk);
             }
             else {
