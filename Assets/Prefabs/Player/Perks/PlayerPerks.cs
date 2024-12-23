@@ -32,22 +32,7 @@ public class PlayerPerks {
 
             Debug.Log("Player already have perk you are trying to add: " + perk);
         }
-        else {
-
-            if (isHasPerk(Perks.Speed)) {
-
-                StartCoroutine(speedRemover());
-            }
-        }
     }
-
-    //Kalische
-    private IEnumerator speedRemover () {
-
-        yield return new WaitForSeconds(5);
-        removePerk(Perks.Speed);
-    }
-    //End of Kalische (jokes on you it will never ever ends)
 
     public void removePerk (Perk perk) {
 

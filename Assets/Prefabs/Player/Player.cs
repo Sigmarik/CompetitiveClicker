@@ -1,5 +1,7 @@
 using Mirror;
 using UnityEngine;
+using System.Collections;
+
 
 // КАПСОМ выделены методы, которых не существует,
 // но которые нужно бы добавить
@@ -30,8 +32,17 @@ public class Player : NetworkBehaviour
         if (Input.GetKeyDown(KeyCode.Space)) {
             
             perks_.buyPerk(Perks.Speed);
+            StartCoroutine(speedRemover());
         }
     }
+
+     //Kalische
+    private IEnumerator speedRemover () {
+
+        yield return new WaitForSeconds(5);
+        perks_.removePerk(Perks.Speed);
+    }
+    //End of Kalische (jokes on you it will never ever ends)
 
     [Server]
     public void Init(GameObject start_node)
