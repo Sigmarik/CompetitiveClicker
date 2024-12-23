@@ -18,7 +18,7 @@ public class ClickerNetworkManager : NetworkManager
     }
 
     void Update() {
-        if (playerCount > 0 && Time.time - lastJoinedTime > 20.0f) {
+        if (playerCount > 0 && playerCount < Score.overallTeams.Length && Time.time - lastJoinedTime > 20.0f) {
             while (playerCount < Score.overallTeams.Length) {
                 OnCreateBot();
             }
