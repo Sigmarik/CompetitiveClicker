@@ -45,7 +45,7 @@ public class RimExplosion : MonoBehaviour
         transform.localScale = Vector3.Scale(new Vector3(sizeHor, sizeHor, sizeVert), ogScale_);
     }
 
-    private void OnDestroy()
+    public void PlayAnimation(bool successful = true)
     {
         if (!effectCopy_)
         {
@@ -55,7 +55,11 @@ public class RimExplosion : MonoBehaviour
             }
             selfCopy_.SetActive(true);
             selfCopy_.transform.position = transform.position;
-            selfCopy_.GetComponent<RimExplosion>().Explode();
+            selfCopy_.transform.localScale = transform.lossyScale;
+            selfCopy_.transform.rotation = transform.rotation;
+            RimExplosion explosion = selfCopy_.GetComponent<RimExplosion>();
+            explosion.collapseInwards = successful;
+            explosion.Explode();
         }
 
     }

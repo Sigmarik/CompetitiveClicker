@@ -6,6 +6,6 @@ public class DBG_RimExploder : MonoBehaviour
 {
     void OnMouseDown()
     {
-        Destroy(gameObject);
+        GetComponentInChildren<RimExplosion>().PlayAnimation(true);
     }
 }
