@@ -17,7 +17,9 @@ public class ClickerNetworkManager : NetworkManager
         NetworkServer.RegisterHandler<CreateCharacterMessage>(OnCreateCharacter);
     }
 
-    void Update() {
+    public override void Update() {
+        base.Update();
+
         if (playerCount > 0 && playerCount < Score.overallTeams.Length && Time.time - lastJoinedTime > 20.0f) {
             while (playerCount < Score.overallTeams.Length) {
                 OnCreateBot();
