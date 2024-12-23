@@ -62,7 +62,7 @@ public class PlayerPerksShop: PlayerPerks {
         this.team = team;
     }
 
-    public void buyPerk (Perk perk) {
+    public bool buyPerk (Perk perk) {
 
         if (perk.cost <= bank.GetMoney(team)) {
 
@@ -70,6 +70,8 @@ public class PlayerPerksShop: PlayerPerks {
 
                 bank.CmdSpendMoney(team, perk.cost);
                 addPerk(perk);
+
+                return true;
             }
             else {
 
@@ -80,6 +82,8 @@ public class PlayerPerksShop: PlayerPerks {
 
             Debug.Log("Player: " + team.ToString() + "hasn't got enouth money to buy perk: " + perk.name);
         }
+
+        return false;
     }
 
     //---Data---//

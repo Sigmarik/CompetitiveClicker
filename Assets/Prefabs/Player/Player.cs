@@ -31,8 +31,10 @@ public class Player : NetworkBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space)) {
             
-            perks_.buyPerk(Perks.Speed);
-            StartCoroutine(speedRemover());
+            if(perks_.buyPerk(Perks.Speed)) {
+
+                StartCoroutine(speedRemover());
+            }
         }
     }
 
