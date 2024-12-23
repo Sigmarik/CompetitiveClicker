@@ -62,6 +62,24 @@ public class ResourceBank : NetworkBehaviour
         player_bank_[team] -= money;
     }
 
+    [Command(requiresAuthority = false)]
+    public void CmdAddIncome(Team team, double income)
+    {
+        AddIncome(team, income);
+    }
+
+    [Command(requiresAuthority = false)]
+    public void CmdSetMoney(Team team, uint money)
+    {
+        SetMoney(team, money);
+    }
+
+    [Command(requiresAuthority = false)]
+    public void CmdSpendMoney(Team team, uint money)
+    {
+        SpendMoney(team, money);
+    }
+
     private readonly SyncDictionary<Team, double> player_bank_;
     private readonly SyncDictionary<Team, double> player_income_;
 }
