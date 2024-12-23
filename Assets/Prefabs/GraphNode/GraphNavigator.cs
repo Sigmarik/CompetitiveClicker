@@ -6,9 +6,18 @@ using UnityEngine.Splines;
 
 public class GraphNavigator : MonoBehaviour
 {
-    void Awake()
+    void Start()
     {
+        FixPathSplines();
+        RemoveDuplicates();
+
+        foreach (RouteEntry entry in publicRoutes)
+        {
+            ReplicatePath(entry);
+        }
+
         BakeRoutes();
+        firstUpdateTime = Time.time + 0.3f;
     }
 
     void BakeRoutes()
@@ -58,8 +67,24 @@ public class GraphNavigator : MonoBehaviour
         }
     }
 
+    private float firstUpdateTime = 0.0f;
+    private bool needRebaking = true;
+
+    void Update() {
+        // Ugly fix, because path script is called after Bake or idk
+        if (needRebaking && Time.time > firstUpdateTime) {
+            BakeRoutes();
+            needRebaking = false;
+        }
+    }
+
     public RouteEntry NextHopTo(GameObject target)
     {
+        // Script meme
+        if (!nextHop.ContainsKey(target)) {
+            BakeRoutes();
+        }
+
         return nextHop[target];
     }
 
