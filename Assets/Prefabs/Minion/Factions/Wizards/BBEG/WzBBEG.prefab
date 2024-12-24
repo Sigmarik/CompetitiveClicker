@@ -69,6 +69,7 @@ MonoBehaviour:
   syncInterval: 0
   team: 2
   runnerPrefab: {fileID: 3879105812615859664, guid: 982b262322e3d3f42903d41d6d713473, type: 3}
+  graphWalker_: {fileID: 0}
 --- !u!114 &-3730636575190542775
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104,7 +105,7 @@ MonoBehaviour:
     departureTime: 0
     progress: 0
     splineInverted: 0
-  speed: 1
+  speed: 10
 --- !u!1001 &8433213157351973596
 PrefabInstance:
   m_ObjectHideFlags: 0
