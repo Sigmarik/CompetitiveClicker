@@ -225,9 +225,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1607097528}
-  - component: {fileID: 1607097525}
   - component: {fileID: 1607097530}
   - component: {fileID: 1607097529}
+  - component: {fileID: 1607097531}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -235,37 +235,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1607097525
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1607097524}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7e416e0486524f0d9580be7e13388f4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sleepDetection: 1
-  sleepTimeoutInSeconds: 30
-  port: 7777
-  DualMode: 1
-  NoDelay: 1
-  Interval: 10
-  Timeout: 10000
-  RecvBufferSize: 7361536
-  SendBufferSize: 7361536
-  FastResend: 2
-  ReceiveWindowSize: 4096
-  SendWindowSize: 4096
-  MaxRetransmit: 40
-  MaximizeSocketBuffers: 1
-  ReliableMaxMessageSize: 297433
-  UnreliableMaxMessageSize: 1194
-  debugLog: 0
-  statisticsGUI: 0
-  statisticsLog: 0
 --- !u!4 &1607097528
 Transform:
   m_ObjectHideFlags: 0
@@ -309,14 +278,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 1
   runInBackground: 1
-  headlessStartMode: 0
+  headlessStartMode: 1
   editorAutoStart: 0
   sendRate: 60
   offlineScene: Assets/Scenes/StartingScene.unity
   onlineScene: Assets/Scenes/SimpleDungeon.unity
   offlineSceneLoadDelay: 0
-  transport: {fileID: 1607097525}
-  networkAddress: localhost
+  transport: {fileID: 1607097531}
+  networkAddress: gameserver.cutie.team
   maxConnections: 100
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
@@ -366,6 +335,36 @@ MonoBehaviour:
   KnightBotPrefab: {fileID: 5023635059626492956, guid: e1f6f49fe941d9e4f8887c6c00a9481f, type: 3}
   SkeletonBotPrefab: {fileID: 3455713113593311512, guid: f1236ee3c1954c84da024cf8c310a7d1, type: 3}
   WizardBotPrefab: {fileID: 6369517939746726251, guid: 2a9b6d5846d614642b10941851dcc372, type: 3}
+--- !u!114 &1607097531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1607097524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0110f245bfcfc7d459681f7bd9ebc590, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxMessageSize: 16384
+  maxHandshakeSize: 16384
+  serverMaxMsgsPerTick: 10000
+  clientMaxMsgsPerTick: 1000
+  sendTimeout: 5000
+  receiveTimeout: 20000
+  noDelay: 1
+  sslEnabled: 0
+  sslProtocols: 3072
+  sslCertJson: ./cert.json
+  port: 27777
+  batchSend: 1
+  waitBeforeSend: 1
+  clientUseWss: 1
+  clientWebsocketSettings:
+    ClientPortOption: 1
+    CustomClientPort: 7777
+  minimumLogLevel: 3
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
