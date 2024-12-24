@@ -20,16 +20,18 @@ public class GoldCountRequester : NetworkBehaviour
         // WHICH WE CAN'T REMOVE BECAUSE OF movement sync
         // . . .
         // Suffer
-        if (team_ == Team.Default) {
+        if (team_ == Team.Default && NetworkClient.localPlayer != null) {
             team_ = NetworkClient.localPlayer.gameObject.GetComponent<Player>().team;
         }
 
-        return bank_.GetMoney(team_);
+        if (bank_) return bank_.GetMoney(team_);
+        return 0;
     }
 
     [Client]
     void Update()
     {
+        if (!text_) return;
         text_.text = FindGoldCount().ToString();
     }
 
