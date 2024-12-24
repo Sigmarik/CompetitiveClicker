@@ -91,6 +91,13 @@ public class Score
 
                 onOwnershipChange?.Invoke();
             }
+            else if (change == score)
+            {
+                team = Team.Default;
+                score = 0;
+
+                onOwnershipChange?.Invoke();
+            }
             else
             {
                 score = (uint)(score - change);
