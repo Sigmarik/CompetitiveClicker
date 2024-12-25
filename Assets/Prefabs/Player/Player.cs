@@ -201,8 +201,8 @@ public class Player : NetworkBehaviour
 
         if (IsMoving()) return; // can't spawn minion while moving
 
-        if (isServer) SpawnMinion(graphWalker_.currentNode, target, 1.0f, 1.0f);
-        else       CmdSpawnMinion(graphWalker_.currentNode, target, speedFactor, sizeFuck);
+        if (!isClient) SpawnMinion(graphWalker_.currentNode, target, 1.0f, 1.0f);
+        else           CmdSpawnMinion(graphWalker_.currentNode, target, speedFactor, sizeFuck);
     }
 
     [Server]
