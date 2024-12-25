@@ -92,6 +92,7 @@ public class Player : NetworkBehaviour
     public void Init(GameObject startNode)
     {
         SaveGraphWalker();
+        TeleportTo(startNode);
         RpcInit(startNode);
     }
 
